@@ -10,6 +10,7 @@ import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { motion, Variants } from "framer-motion";
 
 export default function Home() {
   const router = useRouter();
@@ -17,25 +18,6 @@ export default function Home() {
   const [slider, setSlider] = useState(50);
   const [media, setMedia] = useState<any[]>([]);
   const [testimonials, setTestimonials] = useState<any[]>([]);
-
-  useEffect(() => {
-    const elements = document.querySelectorAll(".fade-up, .scale-in");
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("show");
-          }
-        });
-      },
-      { threshold: 0.2 }
-    );
-
-    elements.forEach((el) => observer.observe(el));
-
-    return () => observer.disconnect();
-  }, []);
 
   useEffect(() => {
     fetchMedia();
@@ -61,352 +43,469 @@ export default function Home() {
     return true;
   };
 
+  // Animation variants
+  const fadeInUp: Variants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
+  };
+  
+  const staggerContainer: Variants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.2 } }
+  };
+
   return (
-    <main className="bg-gradient-to-b from-[#F8F7F4] to-[#EFEAE4] text-[#1A1A1A]">
+    <main className="bg-background text-foreground selection:bg-accent/30 selection:text-black">
       
       <Navbar />
-
       <HeroSlider />
 
-      <section className="fade-up max-w-7xl mx-auto px-4 md:px-6 py-20 md:py-32 grid md:grid-cols-2 gap-12 md:gap-20 items-center">
-
+      {/* --- HERO PRODUCT FEATURE --- */}
+      <section className="max-w-7xl mx-auto px-6 py-24 md:py-36 grid md:grid-cols-2 gap-16 md:gap-24 items-center">
+        
         {/* LEFT - PRODUCT IMAGE */}
-        <div className="flex justify-center">
-          <img
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 1, ease: "easeOut" }}
+          className="flex justify-center relative"
+        >
+          <div className="absolute inset-0 bg-accent/20 rounded-full blur-[100px] z-0" />
+          <motion.img
+            animate={{ y: [0, -15, 0] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             src="/images/product.png"
-            alt="product"
-            className="w-[240px] md:w-[420px] drop-shadow-2xl hover:scale-105 transition duration-500"
+            alt="Niacinamide Serum"
+            className="w-[280px] md:w-[480px] drop-shadow-2xl z-10"
           />
-        </div>
+        </motion.div>
 
         {/* RIGHT - PRODUCT INFO */}
-        <div className="scale-in">
-          <h2 className="text-2xl md:text-5xl font-light mb-6 tracking-tight leading-tight">
-            Niacinamide 10% Serum
-          </h2>
+        <motion.div 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={staggerContainer}
+        >
+          <motion.p variants={fadeInUp} className="text-accent tracking-[0.2em] font-medium text-sm mb-4 uppercase">
+            The Essentials Collection
+          </motion.p>
+          <motion.h2 variants={fadeInUp} className="text-4xl md:text-6xl font-light mb-8 tracking-tight leading-tight text-gray-900">
+            Niacinamide 10% <br/> Serum
+          </motion.h2>
 
-          <p className="text-gray-600 mb-6 text-lg">
-            A lightweight serum designed to regulate oil production,
-            strengthen the skin barrier, and reduce redness.
-          </p>
+          <motion.p variants={fadeInUp} className="text-gray-500 mb-8 text-lg font-light leading-relaxed max-w-md">
+            A lightweight, active-rich formula designed to seamlessly regulate oil production, powerfully strengthen the delicate skin barrier, and instantly soothe redness.
+          </motion.p>
 
-          <div className="mb-8 space-y-2 text-gray-700">
-            <p>• Controls excess oil</p>
-            <p>• Improves skin texture</p>
-            <p>• Reduces redness</p>
-          </div>
+          <motion.div variants={fadeInUp} className="mb-10 space-y-4 text-gray-600 font-light">
+            <div className="flex items-center gap-3"><span className="text-accent text-xl">✦</span> Controls excess oil & refines pores</div>
+            <div className="flex items-center gap-3"><span className="text-accent text-xl">✦</span> Improves overall skin texture</div>
+            <div className="flex items-center gap-3"><span className="text-accent text-xl">✦</span> Instantly reduces redness</div>
+          </motion.div>
 
-          <div className="flex items-center gap-6">
-            <span className="text-2xl font-medium">₹699</span>
+          <motion.div variants={fadeInUp} className="flex items-center gap-8">
+            <span className="text-3xl font-light tracking-wide text-gray-900">₹699</span>
             <button
               onClick={async () => {
                 const ok = await requireAuth();
                 if (!ok) return;
                 router.push("/shop");
               }}
-              className="px-8 py-4 bg-[#BFA37A] text-white rounded-full shadow-md hover:shadow-xl hover:scale-105 transition duration-300"
+              className="px-10 py-4 bg-gray-900 text-white rounded-full shadow-xl hover:bg-accent transition-all duration-300 font-medium tracking-wide hover:-translate-y-1 hover:shadow-accent/30"
             >
-              Add to Cart
+              Add to Edit
             </button>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
       </section>
 
-      <section className="fade-up max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24 text-center">
+      {/* --- BENEFITS SECTION --- */}
+      <section className="bg-[#fcfcfb] py-24 md:py-32 border-y border-gray-100 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3" />
+        
+        <div className="max-w-7xl mx-auto px-6 relative z-10 text-center">
+          <motion.h2 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="text-3xl md:text-5xl font-light mb-16 tracking-tight text-gray-900"
+          >
+            Why Your Skin Craves This
+          </motion.h2>
 
-        <h2 className="text-2xl md:text-5xl font-light mb-12 tracking-tight">
-          Why Your Skin Needs This
-        </h2>
-
-        <div className="grid md:grid-cols-3 gap-12">
-
-          <div className="scale-in hover-lift bg-white/70 backdrop-blur-xl border border-white/40 shadow-sm p-6 rounded-xl">
-            <div className="mb-4 flex justify-center">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M12 2C12 2 6 9 6 13a6 6 0 0012 0c0-4-6-11-6-11z" />
-              </svg>
-            </div>
-            <h3 className="text-xl mb-2 font-medium">Oil Control</h3>
-            <p className="text-gray-600">
-              Helps regulate excess sebum and keeps skin balanced.
-            </p>
-          </div>
-
-          <div className="scale-in hover-lift bg-white/70 backdrop-blur-xl border border-white/40 shadow-sm p-6 rounded-xl">
-            <div className="mb-4 flex justify-center">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M12 2l8 4v6c0 5.25-3.5 10-8 12-4.5-2-8-6.75-8-12V6l8-4z" />
-              </svg>
-            </div>
-            <h3 className="text-xl mb-2 font-medium">Barrier Strength</h3>
-            <p className="text-gray-600">
-              Supports the skin barrier for healthier, resilient skin.
-            </p>
-          </div>
-
-          <div className="scale-in hover-lift bg-white/70 backdrop-blur-xl border border-white/40 shadow-sm p-6 rounded-xl">
-            <div className="mb-4 flex justify-center">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M12 3l2.5 5 5.5.5-4 3.5 1.5 5.5-5-3-5 3 1.5-5.5-4-3.5 5.5-.5L12 3z" />
-              </svg>
-            </div>
-            <h3 className="text-xl mb-2 font-medium">Even Texture</h3>
-            <p className="text-gray-600">
-              Improves skin texture and reduces redness over time.
-            </p>
-          </div>
-
+          <motion.div 
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+            className="grid md:grid-cols-3 gap-8 md:gap-12"
+          >
+            {[
+              { title: "Oil Control", desc: "Helps powerfully regulate excess sebum and keeps skin perfectly balanced.", icon: "M12 2C12 2 6 9 6 13a6 6 0 0012 0c0-4-6-11-6-11z" },
+              { title: "Barrier Strength", desc: "Deeply supports and revitalizes the skin barrier for healthier resilience.", icon: "M12 2l8 4v6c0 5.25-3.5 10-8 12-4.5-2-8-6.75-8-12V6l8-4z" },
+              { title: "Even Texture", desc: "Visibly improves skin texture and masterfully reduces redness over time.", icon: "M12 3l2.5 5 5.5.5-4 3.5 1.5 5.5-5-3-5 3 1.5-5.5-4-3.5 5.5-.5L12 3z" }
+            ].map((feature, i) => (
+              <motion.div 
+                key={i} 
+                variants={fadeInUp}
+                className="group bg-white/60 backdrop-blur-3xl border border-white/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-10 rounded-3xl hover:-translate-y-2 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-500"
+              >
+                <div className="w-16 h-16 mx-auto bg-accent/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-accent/20 transition-all duration-500">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-accent">
+                    <path d={feature.icon} />
+                  </svg>
+                </div>
+                <h3 className="text-xl mb-3 font-medium text-gray-800 tracking-wide">{feature.title}</h3>
+                <p className="text-gray-500 font-light leading-relaxed">
+                  {feature.desc}
+                </p>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
-
       </section>
 
-      <section className="fade-up max-w-7xl mx-auto px-4 md:px-6 py-24 md:py-36 grid md:grid-cols-2 gap-16 items-center">
 
-        {/* LEFT - FLOATING PRODUCT */}
-        <div
-          className="flex justify-center perspective-[1000px]"
-          onMouseMove={(e) => {
-            const target = e.currentTarget.querySelector("img");
-            if (!target) return;
-
-            const rect = e.currentTarget.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-
-            const rotateX = ((y / rect.height) - 0.5) * -10;
-            const rotateY = ((x / rect.width) - 0.5) * 10;
-
-            target.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-          }}
-          onMouseLeave={(e) => {
-            const target = e.currentTarget.querySelector("img");
-            if (!target) return;
-            target.style.transform = "rotateX(0deg) rotateY(0deg)";
-          }}
+      {/* --- INGREDIENTS SPOTLIGHT --- */}
+      <section className="max-w-7xl mx-auto px-6 py-24 md:py-36 grid md:grid-cols-2 gap-16 md:gap-24 items-center">
+        
+        {/* LEFT - FLOATING PRODUCT EXPERENCE */}
+        <motion.div
+           initial={{ opacity: 0, x: -50 }}
+           whileInView={{ opacity: 1, x: 0 }}
+           viewport={{ once: true }}
+           transition={{ duration: 1 }}
+           className="relative flex justify-center group"
         >
-          <img
+          <div className="absolute inset-0 bg-gradient-to-tr from-accent/20 to-transparent w-full h-[500px] rounded-full blur-[80px] -z-10" />
+          <motion.img
             src="/images/product.png"
-            alt="product"
-            className="w-[200px] md:w-[340px] drop-shadow-2xl animate-[float_6s_ease-in-out_infinite] transition-transform duration-300"
+            alt="product overlay"
+            className="w-[200px] md:w-[380px] drop-shadow-2xl transition-transform duration-700 group-hover:scale-105"
           />
-        </div>
+        </motion.div>
 
         {/* RIGHT - INGREDIENTS */}
-        <div>
-          <h2 className="text-2xl md:text-5xl font-light mb-8 tracking-tight">
-            Powered by Ingredients That Work
-          </h2>
+        <motion.div
+           initial="hidden"
+           whileInView="visible"
+           viewport={{ once: true }}
+           variants={staggerContainer}
+        >
+          <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-light mb-10 tracking-tight leading-tight">
+            Powered by Elements <br/> That Innovate
+          </motion.h2>
 
-          <div className="space-y-6 text-lg text-gray-700">
-            <p className="animate-[fadeIn_1s_ease_forwards]">Niacinamide 10% → Controls oil</p>
-            <p className="animate-[fadeIn_1s_ease_forwards] [animation-delay:0.3s]">Zinc → Reduces inflammation</p>
-            <p className="animate-[fadeIn_1s_ease_forwards] [animation-delay:0.6s]">Barrier Complex → Strengthens skin</p>
+          <div className="space-y-8">
+            {[
+              { name: "Niacinamide 10%", desc: "Dramatically controls oil & refines pores." },
+              { name: "Zinc Complex", desc: "Instantly reduces inflammation & redness." },
+              { name: "Barrier Matrix", desc: "Defends & deeply strengthens skin integrity." }
+            ].map((item, i) => (
+              <motion.div key={i} variants={fadeInUp} className="flex gap-4 items-start border-b border-gray-100 pb-6">
+                <div className="mt-1 text-accent">
+                  <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <div>
+                  <h4 className="text-xl font-medium tracking-wide text-gray-800 mb-1">{item.name}</h4>
+                  <p className="text-gray-500 font-light">{item.desc}</p>
+                </div>
+              </motion.div>
+            ))}
           </div>
-        </div>
+        </motion.div>
 
       </section>
 
-      {/* SKIN SCANNER SECTION */}
-      <section className="fade-up max-w-7xl mx-auto px-4 md:px-6 py-20 md:py-32 text-center">
+      {/* --- AI SKIN SCANNER SECTION --- */}
+      <section className="relative py-24 md:py-36 overflow-hidden bg-black text-white">
+        {/* Subtle background glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] max-w-[800px] max-h-[800px] bg-accent/20 rounded-full blur-[150px] pointer-events-none" />
+        
+        <div className="max-w-7xl mx-auto px-6 relative z-10 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <p className="text-accent tracking-[0.3em] font-medium text-sm mb-4 uppercase">Advanced Diagnostics</p>
+            <h2 className="text-4xl md:text-6xl font-light mb-6 tracking-tight">
+              Visualize Your Glow
+            </h2>
+            <p className="text-gray-400 mb-12 max-w-xl mx-auto font-light text-lg">
+              Upload or discreetly capture your skin to witness the instant transformation powered by our curated formulation insights.
+            </p>
+          </motion.div>
 
-        <h2 className="text-2xl md:text-5xl font-light mb-6 tracking-tight">
-          See The Difference On Your Skin
-        </h2>
-
-        <p className="text-gray-600 mb-10">
-          Upload or capture your skin and see instant results.
-        </p>
-
-        {!image ? (
-          <div className="flex flex-col items-center gap-6">
-            <label className="px-6 py-4 bg-[#BFA37A] text-white rounded-lg cursor-pointer">
-              Upload or Capture Photo
-              <input
-                type="file"
-                accept="image/*"
-                capture="environment"
-                onChange={async (e) => {
-                  const ok = await requireAuth();
-                  if (!ok) return;
-
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setImage(URL.createObjectURL(file));
-                  }
-                }}
-                className="hidden"
-              />
-            </label>
-          </div>
-        ) : (
-          <div className="relative w-full max-w-2xl mx-auto overflow-hidden rounded-2xl shadow-xl border border-white/40">
-
-            {/* AFTER IMAGE */}
-            <img
-              src={image}
-              className="w-full h-full object-cover brightness-110 contrast-110 saturate-110"
-            />
-
-            {/* BEFORE IMAGE */}
-            <div
-              className="absolute top-0 left-0 h-full overflow-hidden"
-              style={{ width: `${slider}%` }}
+          {!image ? (
+            <motion.div 
+               initial={{ opacity: 0, scale: 0.95 }}
+               whileInView={{ opacity: 1, scale: 1 }}
+               viewport={{ once: true }}
+               className="flex flex-col items-center gap-6"
             >
+              <label className="relative group cursor-pointer">
+                <div className="absolute -inset-1 rounded-2xl blur-md bg-gradient-to-r from-accent to-[#d8c3a1] opacity-60 group-hover:opacity-100 transition duration-500" />
+                <div className="relative px-10 py-5 bg-[#111] text-white rounded-2xl flex items-center gap-3">
+                  <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  <span className="font-medium tracking-wide">Upload & Scan Now</span>
+                </div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  onChange={async (e) => {
+                    const ok = await requireAuth();
+                    if (!ok) return;
+
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      setImage(URL.createObjectURL(file));
+                    }
+                  }}
+                  className="hidden"
+                />
+              </label>
+            </motion.div>
+          ) : (
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="relative w-full max-w-3xl mx-auto overflow-hidden rounded-3xl border border-white/20 shadow-[0_0_50px_rgba(255,255,255,0.1)]"
+            >
+              {/* AFTER IMAGE (Brightened via filter) */}
               <img
                 src={image}
-                className="w-full h-full object-cover"
+                className="w-full aspect-[4/3] object-cover brightness-[1.15] contrast-[1.05] saturate-[1.1] filter"
+                alt="After"
               />
-            </div>
 
-            {/* SLIDER */}
-            <input
-              type="range"
-              min="0"
-              max="100"
-              value={slider}
-              onChange={(e) => setSlider(Number(e.target.value))}
-              className="absolute bottom-4 left-1/2 -translate-x-1/2 w-3/4"
-            />
+              {/* BEFORE IMAGE (Original) */}
+              <div
+                className="absolute top-0 left-0 h-full overflow-hidden border-r-[3px] border-accent"
+                style={{ width: `${slider}%` }}
+              >
+                <div className="absolute top-1/2 -translate-y-1/2 right-1 w-6 h-6 bg-accent rounded-full flex items-center justify-center shadow-lg transform translate-x-1/2 -mx-1 pointer-events-none z-10">
+                   <div className="w-1.5 h-1.5 bg-white rounded-full" />
+                </div>
+                <img
+                  src={image}
+                  className="absolute top-0 left-0 h-full w-[100vw] max-w-[48rem] object-cover"
+                  style={{ width: "100%", maxWidth: "none", minWidth: "100%", clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)" }}
+                  alt="Before"
+                />
+              </div>
 
-          </div>
-        )}
+              {/* SLIDER CONTROLLER */}
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={slider}
+                onChange={(e) => setSlider(Number(e.target.value))}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-ew-resize z-20"
+              />
+              
+              <div className="absolute top-4 left-6 bg-black/60 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider border border-white/10 z-30 pointer-events-none">
+                BEFORE
+              </div>
+              <div className="absolute top-4 right-6 bg-accent/90 text-white px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider shadow-lg z-30 pointer-events-none">
+                AFTER 14 DAYS
+              </div>
 
+            </motion.div>
+          )}
+        </div>
       </section>
 
-      {/* REAL RESULTS REELS SECTION */}
-      <section className="fade-up max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
+      {/* --- COMMUNITY REELS --- */}
+      <section className="py-24 md:py-36 bg-[#f9f8f6]">
+        <div className="max-w-7xl mx-auto px-6">
+          <motion.h2 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-3xl md:text-5xl font-light mb-16 text-center tracking-tight text-gray-900"
+          >
+            The Be-Owned Routine in Action
+          </motion.h2>
 
-        <h2 className="text-2xl md:text-5xl font-light mb-12 text-center tracking-tight">
-          Real Results From Our Community
-        </h2>
-
-        <Swiper
-          spaceBetween={20}
-          grabCursor={true}
-          slidesPerView={1.2}
-          breakpoints={{
-            768: { slidesPerView: 2 },
-            1024: { slidesPerView: 3 }
-          }}
-          className="pb-6"
-        >
-          {media
-            .filter((m: any) => m.type === "video")
-            .map((m: any) => (
-              <SwiperSlide key={m.id}>
-                <div className="scale-in relative rounded-2xl overflow-hidden border border-gray-200 shadow-sm group hover-lift">
+          <Swiper
+            spaceBetween={24}
+            grabCursor={true}
+            slidesPerView={1.2}
+            breakpoints={{
+              640: { slidesPerView: 2.2 },
+              1024: { slidesPerView: 3.2 }
+            }}
+            className="pb-12 px-4!"
+          >
+            {media.filter((m: any) => m.type === "video").map((m: any, i) => (
+              <SwiperSlide key={m.id || i}>
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="relative rounded-[2rem] overflow-hidden shadow-[0_10px_30px_rgb(0,0,0,0.05)] group aspect-[3/4]"
+                >
                   <video
                     src={m.image}
                     muted
                     autoPlay
                     loop
                     playsInline
-                    controls
-                    onError={() => console.error("Video load failed:", m.image)}
-                    className="w-full h-[320px] md:h-[420px] object-cover group-hover:scale-110 transition duration-700"
+                    controls={false}
+                    className="w-full h-full object-cover group-hover:scale-105 transition duration-700"
                   />
-                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition"></div>
-                  <div className="absolute bottom-4 left-4 text-white text-sm opacity-0 group-hover:opacity-100 transition">
-                    Real results in 7 days
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+                  <div className="absolute bottom-6 left-6 right-6">
+                    <p className="text-white font-medium mb-1 drop-shadow-md">Unfiltered Results</p>
+                    <p className="text-white/80 text-sm font-light drop-shadow-md">Daily application over 4 weeks</p>
                   </div>
-                </div>
+                  
+                  {/* Play icon overlay on hover */}
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                     <svg width="24" height="24" fill="white" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+                  </div>
+                </motion.div>
               </SwiperSlide>
             ))}
-        </Swiper>
-        {media.length === 0 && (
-          <p className="text-center text-gray-500 mt-6">
-            No reels uploaded yet
-          </p>
-        )}
-
-      </section>
-
-      <section className="fade-up max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
-
-        <h2 className="text-2xl md:text-5xl font-light mb-12 text-center tracking-tight">
-          What People Are Saying
-        </h2>
-
-        <Swiper
-          modules={[Autoplay]}
-          autoplay={{ delay: 3000 }}
-          loop
-          className="max-w-3xl mx-auto"
-        >
-          {testimonials.map((t: any) => (
-            <SwiperSlide key={t.id}>
-              <div className="bg-white/90 backdrop-blur-xl border border-white/40 shadow-md p-10 rounded-2xl text-center transition-all duration-300 hover:shadow-lg">
-                <p className="text-gray-700 mb-6 text-lg leading-relaxed">
-                  {t.message}
-                </p>
-                <span className="text-sm text-gray-500 tracking-wide">
-                  — {t.name}
-                </span>
+            {media.filter((m: any) => m.type === "video").length === 0 && (
+              <div className="flex justify-center items-center h-64 border border-dashed border-gray-300 rounded-3xl">
+                <p className="text-gray-400 font-light tracking-wide">Community reels updating shortly...</p>
               </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-
+            )}
+          </Swiper>
+        </div>
       </section>
 
-      {/* FINAL CTA SECTION */}
-      <section className="fade-up max-w-7xl mx-auto px-4 md:px-6 py-20 md:py-32 text-center bg-gradient-to-br from-[#EFEAE4] to-[#F5F5F2]">
+      {/* --- TESTIMONIALS --- */}
+      <section className="py-24 md:py-36 bg-white overflow-hidden relative">
+        <div className="absolute top-0 left-0 w-[400px] h-[400px] bg-accent/5 rounded-full blur-[100px] -translate-x-1/2 -translate-y-1/2" />
+        
+        <div className="max-w-7xl mx-auto px-6 relative z-10 text-center">
+          <motion.p 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            className="text-accent tracking-[0.2em] font-medium text-sm mb-4 uppercase"
+          >
+            Voices of Trust
+          </motion.p>
+          <motion.h2 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-3xl md:text-5xl font-light mb-16 tracking-tight text-gray-900"
+          >
+            What They Say
+          </motion.h2>
 
-        <h2 className="text-2xl md:text-5xl font-light mb-6 tracking-tight">
-          Take The Test Of Your Skin
-        </h2>
-
-        <p className="text-gray-600 mb-10 max-w-xl mx-auto">
-          Discover what your skin truly needs. Get personalized insights and start your journey to healthier skin today.
-        </p>
-
-        <button
-          onClick={() => router.push("/beowned-ai")}
-          className="px-6 md:px-10 py-3 md:py-4 bg-[#BFA37A] text-white rounded-lg text-lg shadow-md hover:shadow-xl hover:scale-105 transition duration-300"
-        >
-          Start Skin Test
-        </button>
-
+          <Swiper
+            modules={[Autoplay]}
+            autoplay={{ delay: 4000, disableOnInteraction: false }}
+            loop
+            className="max-w-4xl mx-auto"
+          >
+            {testimonials.length > 0 ? testimonials.map((t: any, i) => (
+              <SwiperSlide key={t.id || i}>
+                <div className="px-4 py-8">
+                   <div className="bg-gray-50/80 backdrop-blur-xl border border-gray-100 shadow-[0_8px_40px_rgba(0,0,0,0.03)] p-12 md:p-16 rounded-[2rem] text-center transition-all duration-300">
+                     <div className="text-accent/40 mb-8 inline-block">
+                        <svg width="48" height="48" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" /></svg>
+                     </div>
+                     <p className="text-gray-700 mb-8 text-xl md:text-2xl font-light leading-relaxed italic">
+                       "{t.message}"
+                     </p>
+                     <p className="text-sm text-gray-900 font-medium tracking-widest uppercase">
+                       {t.name} <span className="text-accent ml-2">Verified Purchase</span>
+                     </p>
+                   </div>
+                </div>
+              </SwiperSlide>
+            )) : (
+              <SwiperSlide>
+                <div className="px-4 py-8">
+                   <div className="bg-gray-50/80 backdrop-blur-xl border border-gray-100 shadow-sm p-12 md:p-16 rounded-[2rem] text-center">
+                     <p className="text-gray-500 font-light italic text-xl">"A transformative addition to my minimalist routine. The texture is divine and the results speak for themselves."</p>
+                     <p className="mt-8 text-sm text-gray-900 font-medium tracking-widest uppercase">Sarah L.</p>
+                   </div>
+                </div>
+              </SwiperSlide>
+            )}
+          </Swiper>
+        </div>
       </section>
 
-      {/* APP LAUNCH SECTION */}
-      <section className="fade-up max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24 text-center bg-[#EFEAE4]">
-
-        <h2 className="text-2xl md:text-5xl font-light mb-6 tracking-tight">
-          Launching Soon
-        </h2>
-
-        <p className="text-gray-600 mb-10">
-          Experience Beowned Skin on your mobile. Coming soon to your favorite app stores.
-        </p>
-
-        <div className="flex justify-center gap-6 flex-wrap">
-
-          {/* PLAY STORE */}
-          <div className="flex items-center gap-3 bg-white/80 backdrop-blur-xl border border-white/40 shadow-sm px-6 py-3 rounded-xl hover:scale-105 transition">
-            <svg width="28" height="28" viewBox="0 0 512 512" fill="none">
-              <path d="M325.3 234.3L104.6 13.6C96.5 5.5 82.7 11.3 82.7 22.9V489.1C82.7 500.7 96.5 506.5 104.6 498.4L325.3 277.7C333.3 269.7 333.3 242.3 325.3 234.3Z" fill="#34A853"/>
-            </svg>
-            <div className="text-left">
-              <p className="text-xs text-gray-500">Get it on</p>
-              <p className="text-sm font-medium">Google Play</p>
-            </div>
-          </div>
-
-          {/* APP STORE */}
-          <div className="flex items-center gap-3 bg-white/80 backdrop-blur-xl border border-white/40 shadow-sm px-6 py-3 rounded-xl hover:scale-105 transition">
-            <svg width="28" height="28" viewBox="0 0 384 512" fill="none">
-              <path d="M318.7 268.7c-.2-48.2 39.4-71.3 41.1-72.3-22.5-32.9-57.6-37.4-70-37.9-29.8-3-58.1 17.5-73.2 17.5-15.1 0-38.4-17.1-63.2-16.6-32.5.5-62.5 18.9-79.2 48-33.8 58.6-8.6 145.5 24.3 192.9 16.1 23.3 35.3 49.4 60.5 48.5 24.3-1 33.5-15.7 62.9-15.7 29.4 0 37.7 15.7 63.4 15.2 26.2-.5 42.8-23.9 58.8-47.3 18.4-26.8 26-52.7 26.4-54.1-.6-.3-50.6-19.4-50.8-77.9z" fill="#000"/>
-            </svg>
-            <div className="text-left">
-              <p className="text-xs text-gray-500">Download on the</p>
-              <p className="text-sm font-medium">App Store</p>
-            </div>
-          </div>
-
+      {/* --- FINAL CTA & APP BANNER --- */}
+      <section className="relative overflow-hidden py-24 md:py-36 text-center bg-gray-900 text-white">
+        <div className="absolute inset-0 z-0">
+           <div className="absolute inset-0 bg-gradient-to-t from-black via-gray-900 to-gray-800" />
+           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[600px] bg-accent/10 rounded-full blur-[120px]" />
         </div>
 
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="relative z-10 max-w-4xl mx-auto px-6"
+        >
+          <h2 className="text-4xl md:text-6xl font-light mb-8 tracking-tight">
+            Unlock Your Deepest Glow
+          </h2>
+          <p className="text-gray-400 mb-12 max-w-2xl mx-auto text-lg md:text-xl font-light leading-relaxed">
+            Take our bespoke AI skin diagnostic and embark on a personalized journey toward transformative skin health.
+          </p>
+          <button
+            onClick={() => router.push("/beowned-ai")}
+            className="px-10 py-5 bg-white text-black rounded-full text-lg font-medium tracking-wide shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:shadow-[0_0_60px_rgba(255,255,255,0.4)] hover:-translate-y-1 transition-all duration-300 mb-20"
+          >
+            Launch Diagnostics
+          </button>
+
+          <div className="pt-20 border-t border-gray-800">
+            <h3 className="text-sm font-semibold tracking-[0.2em] text-gray-500 uppercase mb-8">
+              Experience the App Soon
+            </h3>
+            
+            <div className="flex justify-center gap-6 flex-wrap">
+              {/* PLAY STORE */}
+              <button className="flex items-center gap-4 bg-black/40 border border-gray-700 hover:border-accent hover:bg-gray-800 transition-all duration-300 px-8 py-4 rounded-2xl group relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-[150%] group-hover:translate-x-[150%] transition-transform duration-700" />
+                <svg width="28" height="28" viewBox="0 0 512 512" fill="none">
+                  <path d="M325.3 234.3L104.6 13.6C96.5 5.5 82.7 11.3 82.7 22.9V489.1C82.7 500.7 96.5 506.5 104.6 498.4L325.3 277.7C333.3 269.7 333.3 242.3 325.3 234.3Z" fill="#34A853"/>
+                </svg>
+                <div className="text-left">
+                  <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-0.5">Get it on</p>
+                  <p className="text-sm font-medium tracking-wide">Google Play</p>
+                </div>
+              </button>
+
+              {/* APP STORE */}
+              <button className="flex items-center gap-4 bg-black/40 border border-gray-700 hover:border-accent hover:bg-gray-800 transition-all duration-300 px-8 py-4 rounded-2xl group relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-[150%] group-hover:translate-x-[150%] transition-transform duration-700" />
+                <svg width="28" height="28" viewBox="0 0 384 512" fill="none">
+                  <path d="M318.7 268.7c-.2-48.2 39.4-71.3 41.1-72.3-22.5-32.9-57.6-37.4-70-37.9-29.8-3-58.1 17.5-73.2 17.5-15.1 0-38.4-17.1-63.2-16.6-32.5.5-62.5 18.9-79.2 48-33.8 58.6-8.6 145.5 24.3 192.9 16.1 23.3 35.3 49.4 60.5 48.5 24.3-1 33.5-15.7 62.9-15.7 29.4 0 37.7 15.7 63.4 15.2 26.2-.5 42.8-23.9 58.8-47.3 18.4-26.8 26-52.7 26.4-54.1-.6-.3-50.6-19.4-50.8-77.9z" fill="#fff"/>
+                </svg>
+                <div className="text-left">
+                  <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-0.5">Download on the</p>
+                  <p className="text-sm font-medium tracking-wide">App Store</p>
+                </div>
+              </button>
+            </div>
+          </div>
+        </motion.div>
       </section>
 
       <Footer />

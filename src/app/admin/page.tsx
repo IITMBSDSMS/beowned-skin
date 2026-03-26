@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { motion } from "framer-motion";
 
 export default function AdminDashboard() {
   const [tab, setTab] = useState("products");
@@ -47,8 +48,6 @@ export default function AdminDashboard() {
       return;
     }
 
-    console.log("Uploading file:", file);
-
     const cleanName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
     const fileName = `${Date.now()}-${cleanName}`;
 
@@ -57,23 +56,15 @@ export default function AdminDashboard() {
       .upload(fileName, file);
 
     if (uploadError) {
-      console.error("Upload error:", uploadError);
       alert("Upload failed: " + uploadError.message);
       return;
     }
-
-    console.log("Upload success:", uploadData);
 
     const { data: publicUrlData } = supabase.storage
       .from("media")
       .getPublicUrl(fileName);
 
-    if (!publicUrlData?.publicUrl) {
-      alert("Failed to get public URL");
-      return;
-    }
-
-    console.log("Public URL:", publicUrlData.publicUrl);
+    if (!publicUrlData?.publicUrl) return;
 
     const { error: dbError } = await supabase.from("media").insert([
       {
@@ -83,12 +74,9 @@ export default function AdminDashboard() {
     ]);
 
     if (dbError) {
-      console.error("DB error:", dbError);
       alert("Database insert failed: " + dbError.message);
       return;
     }
-
-    alert("Upload successful 🚀");
 
     setFile(null);
     fetchMedia();
@@ -102,7 +90,6 @@ export default function AdminDashboard() {
   const addProduct = async () => {
     let imageUrl = image;
 
-    // upload file if selected
     if (productFile) {
       const cleanName = productFile.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
       const fileName = `${Date.now()}-${cleanName}`;
@@ -164,142 +151,183 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white p-6">
-      <h1 className="text-3xl font-bold mb-6">Admin Panel</h1>
+    <div className="min-h-screen bg-[#0A0A0A] text-gray-300 font-sans selection:bg-accent/30 selection:text-white pb-20">
+      
+      {/* Top Bar Area */}
+      <header className="px-8 md:px-12 py-8 border-b border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-6 bg-[#0E0E0E]">
+         <div>
+            <h1 className="text-sm text-gray-500 uppercase tracking-[0.2em] font-medium mb-1">Backstage</h1>
+            <p className="text-3xl text-white font-light tracking-tight">Admin System</p>
+         </div>
 
-      {/* Tabs */}
-      <div className="flex gap-4 mb-8">
-        <button onClick={() => setTab("products")} className={`px-4 py-2 rounded ${tab === "products" ? "bg-indigo-500" : "bg-white/10"}`}>Products</button>
-        <button onClick={() => setTab("testimonials")} className={`px-4 py-2 rounded ${tab === "testimonials" ? "bg-indigo-500" : "bg-white/10"}`}>Testimonials</button>
-        <button onClick={() => setTab("media")} className={`px-4 py-2 rounded ${tab === "media" ? "bg-indigo-500" : "bg-white/10"}`}>Reels</button>
-      </div>
+         {/* Minimal Tabs */}
+         <div className="flex gap-2 p-1 bg-white/5 rounded-xl border border-white/5">
+           {["products", "testimonials", "media"].map(t => (
+             <button
+               key={t}
+               onClick={() => setTab(t)}
+               className={`px-5 py-2.5 rounded-lg text-sm tracking-wide capitalize transition-all duration-300 ${
+                 tab === t ? "bg-white text-black shadow-lg" : "text-gray-400 hover:text-white hover:bg-white/5"
+               }`}
+             >
+               {t}
+             </button>
+           ))}
+         </div>
+      </header>
 
-      {/* MEDIA / REELS */}
-      {tab === "media" && (
-        <>
-          <div className="bg-white/10 p-6 rounded-xl mb-8">
-            <h2 className="mb-4">Upload Reel / Media</h2>
+      {/* Content Canvas */}
+      <div className="p-8 md:p-12 max-w-7xl mx-auto">
+         <motion.div 
+            key={tab}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+         >
+            {/* MEDIA / REELS */}
+            {tab === "media" && (
+              <div className="space-y-12">
+                <section className="bg-[#111] border border-white/5 p-8 rounded-2xl">
+                  <h2 className="text-lg text-white font-medium mb-6">Import New Asset</h2>
+                  <div className="max-w-xl space-y-4">
+                     <div className="relative group">
+                        <input
+                           type="file"
+                           accept="image/*,video/*"
+                           onChange={(e) => setFile(e.target.files?.[0] || null)}
+                           className="w-full text-sm text-gray-500 file:mr-4 file:py-3 file:px-6 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:uppercase file:tracking-widest file:bg-white/10 file:text-white hover:file:bg-white/20 cursor-pointer"
+                        />
+                     </div>
+                     {file && (
+                       <div className="mt-4 border border-white/10 rounded-xl overflow-hidden bg-black max-h-[300px] flex items-center justify-center">
+                          {file.type.startsWith("video") ? (
+                             <video src={URL.createObjectURL(file)} className="max-w-full max-h-[300px] object-contain" controls />
+                          ) : (
+                             <img src={URL.createObjectURL(file)} className="max-w-full max-h-[300px] object-contain" />
+                          )}
+                       </div>
+                     )}
+                     <button
+                        onClick={addMedia}
+                        disabled={!file}
+                        className={`w-full py-4 rounded-xl text-sm font-semibold tracking-widest uppercase transition-colors ${
+                          file ? "bg-accent text-black hover:bg-accent/90" : "bg-white/5 text-gray-600 cursor-not-allowed border border-white/5"
+                        }`}
+                     >
+                        Commit to Database
+                     </button>
+                  </div>
+                </section>
 
-            <input
-              type="file"
-              accept="image/*,video/*"
-              onChange={(e) => setFile(e.target.files?.[0] || null)}
-              className="mb-4"
-            />
-
-            {file && (
-              file.type.startsWith("video") ? (
-                <video src={URL.createObjectURL(file)} className="w-full h-48 object-cover rounded mb-3" controls />
-              ) : (
-                <img src={URL.createObjectURL(file)} className="w-full h-48 object-cover rounded mb-3" />
-              )
+                <section>
+                   <h2 className="text-sm text-gray-500 uppercase tracking-widest font-semibold mb-6">Asset Library ({media.length})</h2>
+                   <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                     {media.map((m) => (
+                       <div key={m.id} className="group relative bg-[#111] rounded-2xl border border-white/5 overflow-hidden transition-all duration-300 hover:border-white/20">
+                         <div className="aspect-[4/5] bg-black flex items-center justify-center">
+                           {m.type === "video" ? (
+                             <video src={m.image} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" controls />
+                           ) : (
+                             <img src={m.image} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+                           )}
+                         </div>
+                         <div className="p-3">
+                           <button onClick={() => deleteMedia(m.id)} className="w-full py-2 bg-red-500/10 text-red-500 text-xs tracking-wider uppercase font-semibold rounded-lg opacity-0 transition-opacity group-hover:opacity-100">
+                             Purge
+                           </button>
+                         </div>
+                       </div>
+                     ))}
+                     {media.length === 0 && <p className="text-gray-600 font-lightcol-span-4">No assets in storage.</p>}
+                   </div>
+                </section>
+              </div>
             )}
 
-            <button
-              onClick={addMedia}
-              disabled={!file}
-              className={`py-3 w-full rounded ${
-                file
-                  ? "bg-gradient-to-r from-indigo-500 to-pink-500"
-                  : "bg-gray-700 cursor-not-allowed"
-              }`}
-            >
-              {file ? "Upload Reel" : "Select file first"}
-            </button>
-          </div>
+            {/* PRODUCTS */}
+            {tab === "products" && (
+              <div className="space-y-12">
+                <section className="bg-[#111] border border-white/5 p-8 rounded-2xl flex flex-col md:flex-row gap-10">
+                  <div className="flex-1 space-y-4">
+                     <h2 className="text-lg text-white font-medium mb-6">Add Inventory</h2>
+                     <input placeholder="Formulation Name" value={name} onChange={(e) => setName(e.target.value)} className="w-full bg-black/50 border border-white/10 p-4 rounded-xl text-sm text-white focus:outline-none focus:border-accent transition-colors" />
+                     <div className="grid grid-cols-2 gap-4">
+                        <input placeholder="Current Price (₹)" value={price} onChange={(e) => setPrice(e.target.value)} className="bg-black/50 border border-white/10 p-4 rounded-xl text-sm text-white focus:outline-none focus:border-accent transition-colors" />
+                        <input placeholder="Original MSRP (₹)" value={originalPrice} onChange={(e) => setOriginalPrice(e.target.value)} className="bg-black/50 border border-white/10 p-4 rounded-xl text-sm text-white focus:outline-none focus:border-accent transition-colors" />
+                     </div>
+                     <p className="text-xs text-center text-gray-600 mt-2 font-medium tracking-wide uppercase">— OR —</p>
+                     <input placeholder="External Image URL" value={image} onChange={(e) => setImage(e.target.value)} className="w-full bg-black/50 border border-white/10 p-4 rounded-xl text-sm text-white focus:outline-none focus:border-accent transition-colors" />
+                     <input type="file" accept="image/*" onChange={(e) => setProductFile(e.target.files?.[0] || null)} className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:uppercase file:bg-white/10 file:text-white cursor-pointer" />
+                     
+                     <button onClick={addProduct} className="w-full mt-4 bg-white text-black py-4 rounded-xl text-sm font-semibold tracking-widest uppercase hover:bg-gray-200 transition">
+                        Insert New Product
+                     </button>
+                  </div>
+                  <div className="md:w-64 border border-white/5 bg-black rounded-xl p-4 flex flex-col items-center justify-center min-h-[250px] text-gray-600">
+                     {productFile ? (
+                        <img src={URL.createObjectURL(productFile)} className="w-full h-full object-contain" />
+                     ) : image ? (
+                        <img src={image} className="w-full h-full object-contain" />
+                     ) : (
+                        <span className="text-xs tracking-widest uppercase text-center block">Image Preview</span>
+                     )}
+                  </div>
+                </section>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            {media.map((m) => (
-              <div key={m.id} className="bg-white/5 p-4 rounded-xl">
-                {m.type === "video" ? (
-                  <video src={m.image} className="w-full h-40 object-cover rounded" controls />
-                ) : (
-                  <img src={m.image} className="w-full h-40 object-cover rounded" />
-                )}
-
-                <button onClick={() => deleteMedia(m.id)} className="mt-2 bg-red-500 w-full py-2 rounded">
-                  Delete
-                </button>
+                <section>
+                   <h2 className="text-sm text-gray-500 uppercase tracking-widest font-semibold mb-6">Database Catalog ({products.length})</h2>
+                   <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                     {products.map((p) => (
+                       <div key={p.id} className="bg-[#111] border border-white/5 rounded-2xl overflow-hidden group">
+                         <div className="h-40 bg-[#0a0a0a] flex items-center justify-center p-4">
+                           <img src={p.image} className="max-h-full object-contain group-hover:scale-105 transition-transform" />
+                         </div>
+                         <div className="p-4 border-t border-white/5 space-y-1">
+                           <h3 className="text-sm font-medium text-white truncate">{p.name}</h3>
+                           <p className="text-xs text-gray-400">₹{p.price} <span className="line-through opacity-50 ml-1">₹{p.original_price}</span></p>
+                           <button onClick={() => deleteProduct(p.id)} className="w-full mt-3 py-1.5 border border-red-500/30 text-red-500 hover:bg-red-500 hover:text-white rounded-lg text-[10px] uppercase tracking-widest font-semibold transition-colors">
+                             Purge entry
+                           </button>
+                         </div>
+                       </div>
+                     ))}
+                   </div>
+                </section>
               </div>
-            ))}
-          </div>
-        </>
-      )}
+            )}
 
-      {/* PRODUCTS */}
-      {tab === "products" && (
-        <>
-          <div className="bg-white/10 p-6 rounded-xl mb-8">
-            <h2 className="mb-4">Add Product</h2>
-            <p className="text-sm text-gray-400 mb-2">Use Image URL OR upload file</p>
+            {/* TESTIMONIALS */}
+            {tab === "testimonials" && (
+              <div className="space-y-12">
+                <section className="bg-[#111] border border-white/5 p-8 rounded-2xl max-w-2xl">
+                  <h2 className="text-lg text-white font-medium mb-6">Syndicate Voice</h2>
+                  <div className="space-y-4">
+                     <input placeholder="Client Identifier / Name" value={author} onChange={(e) => setAuthor(e.target.value)} className="w-full bg-black/50 border border-white/10 p-4 rounded-xl text-sm text-white focus:outline-none focus:border-accent transition-colors" />
+                     <textarea placeholder="Client Quote" rows={3} value={testimonial} onChange={(e) => setTestimonial(e.target.value)} className="w-full bg-black/50 border border-white/10 p-4 rounded-xl text-sm text-white focus:outline-none focus:border-accent transition-colors resize-none" />
+                     <button onClick={addTestimonial} className="w-full bg-white text-black py-4 rounded-xl text-sm font-semibold tracking-widest uppercase hover:bg-gray-200 transition">
+                        Add Endorsement
+                     </button>
+                  </div>
+                </section>
 
-            <div className="grid gap-3">
-              <input placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} className="p-3 bg-black border border-white/20 rounded" />
-              <input placeholder="Price" value={price} onChange={(e) => setPrice(e.target.value)} className="p-3 bg-black border border-white/20 rounded" />
-              <input placeholder="Original Price" value={originalPrice} onChange={(e) => setOriginalPrice(e.target.value)} className="p-3 bg-black border border-white/20 rounded" />
-              <input
-                placeholder="Image URL (optional)"
-                value={image}
-                onChange={(e) => setImage(e.target.value)}
-                className="p-3 bg-black border border-white/20 rounded"
-              />
-
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => setProductFile(e.target.files?.[0] || null)}
-                className="p-2 bg-black border border-white/20 rounded"
-              />
-
-              {productFile && (
-                <img
-                  src={URL.createObjectURL(productFile)}
-                  className="w-full h-40 object-cover rounded"
-                />
-              )}
-
-              <button onClick={addProduct} className="bg-gradient-to-r from-indigo-500 to-pink-500 py-3 rounded">Add Product</button>
-            </div>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {products.map((p) => (
-              <div key={p.id} className="bg-white/5 p-4 rounded-xl">
-                <img src={p.image} className="w-full h-40 object-cover rounded" />
-                <h3 className="mt-2">{p.name}</h3>
-                <p>₹{p.price}</p>
-                <p className="line-through text-gray-400">₹{p.original_price}</p>
-                <button onClick={() => deleteProduct(p.id)} className="mt-2 bg-red-500 w-full py-2 rounded">Delete</button>
+                <section>
+                   <h2 className="text-sm text-gray-500 uppercase tracking-widest font-semibold mb-6">Live Endorsements ({testimonials.length})</h2>
+                   <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                     {testimonials.map((t) => (
+                       <div key={t.id} className="bg-[#111] border border-white/5 p-6 rounded-2xl flex flex-col">
+                         <p className="text-gray-300 font-light leading-relaxed mb-6 italic flex-1">"{t.message}"</p>
+                         <div className="flex justify-between items-center border-t border-white/5 pt-4">
+                            <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest">— {t.name}</p>
+                            <button onClick={() => deleteTestimonial(t.id)} className="text-[10px] text-red-500 uppercase tracking-widest font-bold hover:underline">Revoke</button>
+                         </div>
+                       </div>
+                     ))}
+                   </div>
+                </section>
               </div>
-            ))}
-          </div>
-        </>
-      )}
-
-      {/* TESTIMONIALS */}
-      {tab === "testimonials" && (
-        <>
-          <div className="bg-white/10 p-6 rounded-xl mb-8">
-            <h2 className="mb-4">Add Testimonial</h2>
-
-            <input placeholder="Name" value={author} onChange={(e) => setAuthor(e.target.value)} className="p-3 bg-black border border-white/20 rounded w-full mb-3" />
-
-            <textarea placeholder="Message" value={testimonial} onChange={(e) => setTestimonial(e.target.value)} className="p-3 bg-black border border-white/20 rounded w-full mb-3" />
-
-            <button onClick={addTestimonial} className="bg-gradient-to-r from-indigo-500 to-pink-500 py-3 w-full rounded">Add</button>
-          </div>
-
-          <div className="space-y-4">
-            {testimonials.map((t) => (
-              <div key={t.id} className="bg-white/5 p-4 rounded">
-                <p>"{t.message}"</p>
-                <p className="text-gray-400">— {t.name}</p>
-                <button onClick={() => deleteTestimonial(t.id)} className="mt-2 bg-red-500 px-3 py-1 rounded">Delete</button>
-              </div>
-            ))}
-          </div>
-        </>
-      )}
+            )}
+         </motion.div>
+      </div>
     </div>
   );
 }

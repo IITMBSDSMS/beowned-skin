@@ -2,87 +2,77 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#EAE7E2] mt-32 border-t border-gray-200">
+    <footer className="bg-[#111] text-white pt-24 pb-10 border-t border-gray-800">
 
-      <div className="max-w-7xl mx-auto px-6 py-16 grid md:grid-cols-3 gap-12">
+      <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-12 md:gap-8 mb-16">
 
         {/* BRAND */}
-        <div>
-          <h2 className="text-lg font-medium mb-4 tracking-wider">
-            BEOWNED SKIN
+        <div className="md:col-span-2 pr-4 md:pr-12">
+          <h2 className="text-2xl font-light mb-6 tracking-[0.2em] text-white">
+            BE-OWNED SKIN
           </h2>
-          <p className="text-gray-600 text-sm">
-            Science-backed skincare designed for real results.
+          <p className="text-gray-400 text-sm max-w-sm leading-relaxed mb-8">
+            Elevating your daily routine through science-backed formulations. Designed for visible, lasting results. Real skin, real glow.
           </p>
+          <div className="relative max-w-sm group">
+            <input 
+              type="email" 
+              placeholder="Join our newsletter" 
+              className="w-full bg-transparent border-b border-gray-600 py-3 pr-10 focus:outline-none focus:border-accent text-sm transition-colors text-white placeholder:text-gray-500"
+            />
+            <button className="absolute right-0 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-accent hover:text-white transition-colors">
+              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </button>
+          </div>
         </div>
 
-        {/* CONTACT */}
+        {/* EXPLORE */}
         <div>
-          <h3 className="text-sm font-medium mb-4 uppercase tracking-wide">
-            Contact
+          <h3 className="text-xs font-semibold mb-6 uppercase tracking-widest text-gray-500">
+            Explore
           </h3>
-          <p className="text-gray-600 text-sm mb-2">
-            Email: support@beownedskin.co
-          </p>
-          <p className="text-gray-600 text-sm">
-            Phone: +91 98765 43210
-          </p>
+          <ul className="space-y-4 text-sm text-gray-300">
+            <li><Link href="/shop" className="hover:text-accent transition-colors">Shop All</Link></li>
+            <li><Link href="/about" className="hover:text-accent transition-colors">Our Story</Link></li>
+            <li><Link href="/beowned-ai" className="hover:text-accent transition-colors">AI Skin Test</Link></li>
+            <li><Link href="/contact" className="hover:text-accent transition-colors">Contact Us</Link></li>
+          </ul>
         </div>
 
         {/* SOCIAL */}
         <div>
-          <h3 className="text-sm font-medium mb-4 uppercase tracking-wide">
-            Follow Us
+          <h3 className="text-xs font-semibold mb-6 uppercase tracking-widest text-gray-500">
+            Connect
           </h3>
-
-          <div className="flex gap-4">
-
-            {/* Instagram */}
-            <a href="https://www.instagram.com/beownedskin.in/" target="_blank" className="hover:scale-110 transition">
-              <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24">
+          <div className="flex gap-4 mb-8">
+            <a href="https://www.instagram.com/beownedskin.in/" target="_blank" className="w-10 h-10 rounded-full bg-black/50 border border-gray-800 flex items-center justify-center hover:bg-accent hover:border-accent hover:text-white transition-all duration-300 hover:-translate-y-1">
+              <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M7.75 2C4.57 2 2 4.57 2 7.75v8.5C2 19.43 4.57 22 7.75 22h8.5C19.43 22 22 19.43 22 16.25v-8.5C22 4.57 19.43 2 16.25 2h-8.5zm4.25 5a5 5 0 110 10 5 5 0 010-10zm6-1.75a1.25 1.25 0 110 2.5 1.25 1.25 0 010-2.5z"/>
               </svg>
             </a>
-
-            {/* LinkedIn */}
-            <a href="https://www.linkedin.com/company/beowned-skin/?viewAsMember=true" target="_blank" className="hover:scale-110 transition">
-              <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24">
+            <a href="https://www.linkedin.com/company/beowned-skin/?viewAsMember=true" target="_blank" className="w-10 h-10 rounded-full bg-black/50 border border-gray-800 flex items-center justify-center hover:bg-accent hover:border-accent hover:text-white transition-all duration-300 hover:-translate-y-1">
+              <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM.5 8h4v14h-4V8zm7 0h3.6v1.9h.05c.5-.9 1.7-1.9 3.5-1.9 3.75 0 4.45 2.45 4.45 5.65V22h-4v-6.7c0-1.6-.03-3.65-2.22-3.65-2.23 0-2.57 1.74-2.57 3.53V22h-4V8z"/>
               </svg>
             </a>
-
-            {/* Facebook */}
-            <a href="https://www.facebook.com/beownedskin" target="_blank" className="hover:scale-110 transition">
-              <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M22 12.1C22 6.6 17.5 2 12 2S2 6.6 2 12.1c0 5 3.7 9.2 8.5 10v-7H8v-3h2.5V9.8c0-2.5 1.5-3.8 3.7-3.8 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.3 0-1.7.8-1.7 1.6V12h2.9l-.5 3h-2.4v7c4.8-.8 8.5-5 8.5-10z"/>
-              </svg>
-            </a>
-
-            {/* YouTube */}
-            <a href="#" className="hover:scale-110 transition">
-              <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M23.5 6.2s-.2-1.6-.8-2.3c-.8-.9-1.7-.9-2.1-1C17.6 2.5 12 2.5 12 2.5h0s-5.6 0-8.6.4c-.4.1-1.3.1-2.1 1-.6.7-.8 2.3-.8 2.3S0 8.1 0 10v1.9c0 1.9.5 3.8.5 3.8s.2 1.6.8 2.3c.8.9 1.9.9 2.4 1 1.7.2 7.3.4 7.3.4s5.6 0 8.6-.4c.4-.1 1.3-.1 2.1-1 .6-.7.8-2.3.8-2.3s.5-1.9.5-3.8V10c0-1.9-.5-3.8-.5-3.8zM9.5 14.6V7.4l6.3 3.6-6.3 3.6z"/>
-              </svg>
-            </a>
-
           </div>
+          <p className="text-gray-400 text-sm leading-relaxed">
+            <a href="mailto:support@beownedskin.co" className="hover:text-accent transition-colors">support@beownedskin.co</a><br/>
+            +91 98765 43210
+          </p>
         </div>
 
       </div>
 
       {/* LEGAL */}
-      <div className="border-t border-gray-300 py-6 text-center text-sm text-gray-500 relative z-10">
-        <p>© 2026 Beowned Skin. All rights reserved.</p>
-        <div className="flex justify-center gap-6 mt-2">
-          <Link href="/privacy-policy" className="cursor-pointer hover:text-black">
-            Privacy Policy
-          </Link>
-          <Link href="/terms" className="cursor-pointer hover:text-black">
-            Terms of Service
-          </Link>
-          <Link href="/refund" className="cursor-pointer hover:text-black">
-            Refund Policy
-          </Link>
+      <div className="max-w-7xl mx-auto px-6 border-t border-gray-800/50 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
+        <p>© {new Date().getFullYear()} Beowned Skin. All rights reserved.</p>
+        <div className="flex gap-6">
+          <Link href="/privacy-policy" className="hover:text-gray-300 transition-colors">Privacy Policy</Link>
+          <Link href="/terms" className="hover:text-gray-300 transition-colors">Terms of Service</Link>
+          <Link href="/refund" className="hover:text-gray-300 transition-colors">Refund</Link>
         </div>
       </div>
 

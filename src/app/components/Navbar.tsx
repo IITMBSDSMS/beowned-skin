@@ -3,22 +3,22 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [placeholder, setPlaceholder] = useState("");
-  const fullText = "Search products...";
+  const fullText = "Search premium skincare...";
+
   useEffect(() => {
     let i = 0;
     const interval = setInterval(() => {
       setPlaceholder(fullText.slice(0, i + 1));
       i++;
-      if (i === fullText.length) {
-        clearInterval(interval);
-      }
-    }, 80);
+      if (i === fullText.length) clearInterval(interval);
+    }, 60);
     return () => clearInterval(interval);
   }, []);
 
@@ -27,100 +27,135 @@ export default function Navbar() {
       const { data } = await supabase.auth.getUser();
       setUser(data.user);
     };
-
     getUser();
   }, []);
+
   return (
-    <div className="fixed top-0 w-full z-50 bg-[#F5F5F2]/80 backdrop-blur-md border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 flex items-center justify-between gap-6">
+    <>
+      <motion.nav 
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        className="fixed top-0 w-full z-50 transition-all duration-300 bg-white/60 backdrop-blur-2xl border-b border-white/30 shadow-[0_4px_30px_rgba(0,0,0,0.03)]"
+      >
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-6">
 
-        {/* LOGO */}
-        <h1 className="tracking-widest font-semibold text-lg">
-          BE-OWNED SKIN
-        </h1>
+          {/* LOGO */}
+          <Link href="/">
+            <h1 className="tracking-[0.2em] font-light text-xl hover:text-accent transition-colors duration-300">
+              BE-OWNED SKIN
+            </h1>
+          </Link>
 
-        {/* SEARCH BAR */}
-        <div className="hidden md:flex flex-1 max-w-md">
-          <input
-            type="text"
-            placeholder={placeholder}
-            className="w-full px-4 py-2 rounded-full border border-gray-300 bg-white/70 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-[#BFA37A]"
-          />
-        </div>
+          {/* SEARCH BAR */}
+          <div className="hidden md:flex flex-1 max-w-sm ml-8 relative group">
+            <input
+              type="text"
+              placeholder={placeholder}
+              className="w-full pl-10 pr-4 py-2.5 rounded-full border border-gray-200 bg-white/40 backdrop-blur-md focus:outline-none focus:ring-1 focus:ring-accent transition-all duration-300 text-sm placeholder:text-gray-400 group-hover:border-accent/40 shadow-inner"
+            />
+            <svg className="absolute left-3.5 top-3 w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1110.5 3a7.5 7.5 0 016.15 13.65z" />
+            </svg>
+          </div>
 
-        {/* NAV LINKS */}
-        <div className="hidden md:flex gap-8 text-sm">
-          <Link href="/shop" className="hover:text-[#BFA37A] transition">Shop</Link>
-          <Link href="/about" className="hover:text-[#BFA37A] transition">About</Link>
-          <Link href="/contact" className="hover:text-[#BFA37A] transition">Contact</Link>
-          <Link href="/beowned-ai" className="text-[#BFA37A] font-semibold">AI</Link>
-        </div>
+          {/* NAV LINKS */}
+          <div className="hidden md:flex items-center gap-10 text-[12px] uppercase tracking-widest font-medium text-gray-500">
+            <Link href="/shop" className="hover:text-accent transition-colors duration-300 py-2 relative after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:h-[1px] after:w-0 after:bg-accent after:transition-all after:duration-300 hover:after:w-full">Shop</Link>
+            <Link href="/about" className="hover:text-accent transition-colors duration-300 py-2 relative after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:h-[1px] after:w-0 after:bg-accent after:transition-all after:duration-300 hover:after:w-full">Our Story</Link>
+            <Link href="/contact" className="hover:text-accent transition-colors duration-300 py-2 relative after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:h-[1px] after:w-0 after:bg-accent after:transition-all after:duration-300 hover:after:w-full">Contact</Link>
+            <Link href="/beowned-ai" className="text-accent py-2 relative overflow-hidden group border border-accent rounded-full px-5 hover:text-white transition-colors duration-300">
+               <span className="relative z-10 transition-colors">AI SKIN TEST</span>
+               <div className="absolute inset-0 bg-accent translate-y-[100%] group-hover:translate-y-0 transition-transform duration-300 z-0" />
+            </Link>
+          </div>
 
-        {/* ACTIONS */}
-        <div className="flex items-center gap-4">
-
-          {/* HAMBURGER */}
-          <button
-            className="md:hidden text-xl p-2 rounded-lg active:scale-95 transition"
-            onClick={() => setMenuOpen(!menuOpen)}
-          >
-            ☰
-          </button>
-
-          {/* USER / LOGIN */}
-          {user ? (
+          {/* ACTIONS */}
+          <div className="flex items-center gap-5">
+            {/* HAMBURGER */}
             <button
-              onClick={() => router.push("/profile")}
-              className="flex items-center gap-2 hover:scale-110 transition"
+              className="md:hidden text-2xl p-2 rounded-full hover:bg-gray-100 transition-colors"
+              onClick={() => setMenuOpen(!menuOpen)}
             >
-              <img
-                src={user.user_metadata?.avatar_url || "https://ui-avatars.com/api/?name=User"}
-                onError={(e) => {
-                  (e.currentTarget as HTMLImageElement).src = "https://ui-avatars.com/api/?name=User";
-                }}
-                className="w-8 h-8 rounded-full object-cover"
-              />
-            </button>
-          ) : (
-            <button
-              onClick={() => router.push("/login")}
-              className="hover:scale-110 active:scale-95 p-2 rounded-lg transition"
-            >
-              <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"/>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M4 7h16M4 12h16M4 17h16"/>
               </svg>
             </button>
-          )}
 
-          {/* CART */}
-          <button
-            onClick={() => router.push("/shop")}
-            className="hover:scale-110 active:scale-95 p-2 rounded-lg transition"
-          >
-            <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M7 4h-2l-1 2h2l3.6 7.59-1.35 2.44C7.16 16.37 7 16.68 7 17a2 2 0 002 2h12v-2H9.42c-.14 0-.25-.11-.25-.25l.03-.12L10.1 15h7.45a2 2 0 001.79-1.11l3.58-7.16A1 1 0 0022 5H6.21l-.94-2zM7 20a2 2 0 100 4 2 2 0 000-4zm10 0a2 2 0 100 4 2 2 0 000-4z"/>
-            </svg>
-          </button>
+            {/* USER / SIGN IN */}
+            {user ? (
+              <button
+                onClick={() => router.push("/profile")}
+                className="flex items-center gap-2 relative group"
+              >
+                <div className="w-9 h-9 p-[2px] rounded-full border border-gray-200 group-hover:border-accent transition-colors">
+                  <img
+                    src={user.user_metadata?.avatar_url || "https://ui-avatars.com/api/?name=User"}
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src = "https://ui-avatars.com/api/?name=User";
+                    }}
+                    className="w-full h-full rounded-full object-cover"
+                  />
+                </div>
+              </button>
+            ) : (
+              <button
+                onClick={() => router.push("/login")}
+                className="hover:text-accent p-2 transition-colors duration-300"
+              >
+                <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                  <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2m8-10a4 4 0 100-8 4 4 0 000 8z" />
+                </svg>
+              </button>
+            )}
 
+            {/* CART */}
+            <button
+              onClick={() => router.push("/shop")}
+              className="relative p-2 hover:text-accent transition-colors duration-300 group"
+            >
+              <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+              </svg>
+              <span className="absolute top-1.5 right-1 w-2 h-2 bg-accent rounded-full scale-0 group-hover:scale-100 transition-transform duration-300"/>
+            </button>
+          </div>
         </div>
-      </div>
+      </motion.nav>
 
       {/* MOBILE MENU */}
-      {menuOpen && (
-        <>
-          <div
-            className="fixed inset-0 bg-black/30 z-40 pointer-events-auto"
-            onClick={() => setMenuOpen(false)}
-          />
-          <div className="md:hidden relative z-50 bg-white border-t border-gray-200 px-6 py-6 space-y-5 animate-[fadeIn_0.3s_ease]">
-            <Link href="/shop" className="block py-3 text-lg active:scale-95 transition">Shop</Link>
-            <Link href="/about" className="block py-3 text-lg active:scale-95 transition">About</Link>
-            <Link href="/contact" className="block py-3 text-lg active:scale-95 transition">Contact</Link>
-            <Link href="/beowned-ai" className="block py-3 text-lg text-[#BFA37A] font-semibold">AI Skin Test</Link>
-          </div>
-        </>
-      )}
-
-    </div>
+      <AnimatePresence>
+        {menuOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/40 z-40 backdrop-blur-sm"
+              onClick={() => setMenuOpen(false)}
+            />
+            <motion.div 
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className="fixed top-0 right-0 h-full w-[80%] max-w-sm bg-white z-50 shadow-2xl p-8 flex flex-col pt-24"
+            >
+              <div className="absolute top-6 right-6">
+                <button onClick={() => setMenuOpen(false)} className="p-2 text-3xl font-light hover:text-accent transition">×</button>
+              </div>
+              <div className="flex flex-col gap-8 text-lg tracking-widest font-light">
+                <Link href="/shop" onClick={() => setMenuOpen(false)} className="hover:text-accent transition">SHOP</Link>
+                <div className="h-px bg-gray-100" />
+                <Link href="/about" onClick={() => setMenuOpen(false)} className="hover:text-accent transition">OUR STORY</Link>
+                <div className="h-px bg-gray-100" />
+                <Link href="/contact" onClick={() => setMenuOpen(false)} className="hover:text-accent transition">CONTACT</Link>
+                <div className="h-px bg-gray-100" />
+                <Link href="/beowned-ai" onClick={() => setMenuOpen(false)} className="text-accent font-medium">AI SKIN TEST</Link>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

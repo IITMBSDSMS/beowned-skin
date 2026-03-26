@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import Navbar from "../components/Navbar";
+import { motion } from "framer-motion";
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -133,7 +135,7 @@ export default function CheckoutPage() {
       },
 
       theme: {
-        color: "#6366f1",
+        color: "#BFA37A",
       },
     };
 
@@ -142,180 +144,198 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="relative overflow-hidden min-h-screen bg-gradient-to-br from-[#fdfbfb] via-[#f3f4f6] to-[#e0e7ff] px-4 md:px-8 pt-10 pb-28 md:py-16">
-      {/* Background SVG */}
-      <svg className="absolute inset-0 w-full h-full opacity-20 pointer-events-none" viewBox="0 0 800 600" fill="none">
-        <circle cx="150" cy="150" r="200" fill="#c7d2fe" />
-        <circle cx="700" cy="400" r="250" fill="#fbcfe8" />
-      </svg>
-      <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
-
-        {/* LEFT - PRODUCT */}
-        <div className="bg-white/90 backdrop-blur-lg p-4 md:p-6 rounded-3xl shadow-xl border border-gray-200">
-          <h2 className="text-2xl font-bold mb-4 text-gray-900">Your Order</h2>
-
-          <div className="flex items-center gap-4 mb-6">
-            {product && (
-              <>
-                <img src={product.image} className="w-24" />
-                <div>
-                  <h3 className="font-semibold text-gray-900">{product.name}</h3>
-                  <p className="text-[#374151] font-medium">₹{product.price}</p>
-                </div>
-              </>
-            )}
-          </div>
-
-          {/* Quantity */}
-          <div className="flex items-center gap-4 justify-between max-w-[160px]">
-            <button
-              onClick={() => setQty(Math.max(1, qty - 1))}
-              className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg shadow hover:scale-105 active:scale-95 transition"
-            >-</button>
-            <span className="text-lg font-semibold text-gray-900">{qty}</span>
-            <button
-              onClick={() => setQty(qty + 1)}
-              className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg shadow hover:scale-105 active:scale-95 transition"
-            >+</button>
-          </div>
-        </div>
-
-        {/* RIGHT - BILL */}
-        <div className="bg-white/90 backdrop-blur-lg p-4 md:p-6 rounded-3xl shadow-xl border border-gray-200">
-          <h2 className="text-2xl font-bold mb-6 text-gray-900">Invoice</h2>
-
-          <div className="space-y-3 text-[#374151]">
-            <div className="flex justify-between">
-              <span>Subtotal</span>
-              <span>₹{subtotal.toFixed(0)}</span>
-            </div>
-
-            <div className="flex justify-between">
-              <span>GST (18%)</span>
-              <span>₹{gstAmount.toFixed(0)}</span>
-            </div>
-
-            <div className="flex justify-between font-bold text-lg text-indigo-600">
-              <span>Total</span>
-              <span>₹{total.toFixed(0)}</span>
-            </div>
-          </div>
-
-          {/* USER DETAILS */}
-          <div className="mt-6">
-            <h3 className="font-semibold mb-3 text-gray-900">Delivery Details</h3>
-
-            <div className="space-y-3">
-              <input
-                type="text"
-                placeholder="Full Name"
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                  setNameError(e.target.value ? "" : "Name is required");
-                }}
-                className="w-full px-4 py-4 text-base border border-gray-300 rounded-xl bg-white/80 backdrop-blur focus:ring-2 focus:ring-indigo-400 text-gray-900 placeholder-[#6B7280] focus:outline-none"
-              />
-              {nameError && <p className="text-red-500 text-sm">{nameError}</p>}
-
-              <input
-                type="tel"
-                placeholder="Phone Number"
-                value={phone}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setPhone(value);
-
-                  // validation: only digits & 10 length
-                  if (!/^[0-9]*$/.test(value)) {
-                    setPhoneError("Only numbers allowed");
-                  } else if (value.length !== 10) {
-                    setPhoneError("Phone must be 10 digits");
-                  } else {
-                    setPhoneError("");
-                  }
-                }}
-                className="w-full px-4 py-4 text-base border border-gray-300 rounded-xl bg-white/80 backdrop-blur focus:ring-2 focus:ring-indigo-400 text-gray-900 placeholder-[#6B7280] focus:outline-none"
-              />
-              {phoneError && (
-                <p className="text-red-500 text-sm">{phoneError}</p>
-              )}
-
-              <input
-                type="email"
-                placeholder="Email Address"
-                value={email}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setEmail(value);
-
-                  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-                    setEmailError("Enter valid email");
-                  } else {
-                    setEmailError("");
-                  }
-                }}
-                className="w-full px-4 py-4 text-base border border-gray-300 rounded-xl bg-white/80 backdrop-blur focus:ring-2 focus:ring-indigo-400 text-gray-900 placeholder-[#6B7280] focus:outline-none"
-              />
-              {emailError && (
-                <p className="text-red-500 text-sm">{emailError}</p>
-              )}
-
-              <textarea
-                placeholder="Address"
-                rows={3}
-                value={address}
-                onChange={(e) => {
-                  setAddress(e.target.value);
-                  setAddressError(e.target.value ? "" : "Address is required");
-                }}
-                className="w-full px-4 py-4 text-base border border-gray-300 rounded-xl bg-white/80 backdrop-blur focus:ring-2 focus:ring-indigo-400 text-gray-900 placeholder-[#6B7280] focus:outline-none"
-              />
-              {addressError && <p className="text-red-500 text-sm">{addressError}</p>}
-            </div>
-          </div>
-
-          {/* PAYMENT */}
-          <div className="mt-6">
-            <h3 className="font-semibold mb-3 text-gray-900">Payment Method</h3>
-
-            <div className="space-y-2">
-              <label className="flex items-center gap-3 text-gray-400 font-medium p-3 rounded-lg bg-gray-100 cursor-not-allowed">
-                <input type="radio" disabled /> Cash on Delivery (Not available)
-              </label>
-
-              <label className="flex items-center gap-3 text-gray-800 font-medium p-3 rounded-lg hover:bg-gray-100 transition cursor-pointer active:scale-95">
-                <input type="radio" name="payment" value="UPI" onChange={(e)=>{setPayment(e.target.value); setPaymentError("");}} /> UPI / Online
-              </label>
-
-              <label className="flex items-center gap-3 text-gray-400 font-medium p-3 rounded-lg bg-gray-100 cursor-not-allowed">
-                <input type="radio" disabled /> Debit / Credit Card (Coming soon)
-              </label>
-            </div>
-            {paymentError && <p className="text-red-500 text-sm">{paymentError}</p>}
-          </div>
-
-          {/* Desktop Button */}
-          <button
-            onClick={handleOrder}
-            disabled={!product}
-            className={`hidden md:block mt-6 w-full py-3 rounded-xl shadow-md bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899] shadow-lg text-white hover:shadow-xl hover:scale-[1.02] active:scale-95 transition duration-300 ${!product ? "opacity-50 cursor-not-allowed" : ""}`}
+    <>
+      <Navbar />
+      <div className="min-h-screen bg-background pt-32 pb-28 md:py-32">
+        <div className="max-w-5xl mx-auto px-6">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-12 text-center md:text-left"
           >
-            Place Order
-          </button>
+            <h1 className="text-3xl md:text-5xl font-light tracking-tight text-gray-900">Secure Checkout</h1>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-20">
+
+            {/* LEFT - DELIVERY DETAILS */}
+            <motion.div 
+               initial={{ opacity: 0, x: -20 }}
+               animate={{ opacity: 1, x: 0 }}
+               transition={{ delay: 0.1 }}
+               className="md:col-span-7 space-y-12"
+            >
+              <div>
+                <h2 className="text-lg font-medium mb-6 text-gray-900 tracking-wide uppercase">1. Delivery Details</h2>
+                <div className="space-y-5">
+                  <div>
+                    <input
+                      type="text"
+                      placeholder="Full Name"
+                      value={name}
+                      onChange={(e) => {
+                        setName(e.target.value);
+                        setNameError(e.target.value ? "" : "Name is required");
+                      }}
+                      className="w-full px-5 py-4 text-sm border border-gray-200 rounded-xl bg-gray-50/50 focus:bg-white focus:ring-1 focus:ring-accent focus:border-accent text-gray-900 placeholder-gray-400 focus:outline-none transition-colors"
+                    />
+                    {nameError && <p className="text-red-500 text-xs mt-1.5 ml-1">{nameError}</p>}
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                      <input
+                        type="email"
+                        placeholder="Email Address"
+                        value={email}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setEmail(value);
+                          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                            setEmailError("Enter valid email");
+                          } else {
+                            setEmailError("");
+                          }
+                        }}
+                        className="w-full px-5 py-4 text-sm border border-gray-200 rounded-xl bg-gray-50/50 focus:bg-white focus:ring-1 focus:ring-accent focus:border-accent text-gray-900 placeholder-gray-400 focus:outline-none transition-colors"
+                      />
+                      {emailError && <p className="text-red-500 text-xs mt-1.5 ml-1">{emailError}</p>}
+                    </div>
+                    <div>
+                      <input
+                        type="tel"
+                        placeholder="Phone Number"
+                        value={phone}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setPhone(value);
+                          if (!/^[0-9]*$/.test(value)) {
+                            setPhoneError("Only numbers allowed");
+                          } else if (value.length !== 10) {
+                            setPhoneError("Phone must be 10 digits");
+                          } else {
+                            setPhoneError("");
+                          }
+                        }}
+                        className="w-full px-5 py-4 text-sm border border-gray-200 rounded-xl bg-gray-50/50 focus:bg-white focus:ring-1 focus:ring-accent focus:border-accent text-gray-900 placeholder-gray-400 focus:outline-none transition-colors"
+                      />
+                      {phoneError && <p className="text-red-500 text-xs mt-1.5 ml-1">{phoneError}</p>}
+                    </div>
+                  </div>
+
+                  <div>
+                    <textarea
+                      placeholder="Complete Delivery Address"
+                      rows={3}
+                      value={address}
+                      onChange={(e) => {
+                        setAddress(e.target.value);
+                        setAddressError(e.target.value ? "" : "Address is required");
+                      }}
+                      className="w-full px-5 py-4 text-sm border border-gray-200 rounded-xl bg-gray-50/50 focus:bg-white focus:ring-1 focus:ring-accent focus:border-accent text-gray-900 placeholder-gray-400 focus:outline-none transition-colors resize-none"
+                    />
+                    {addressError && <p className="text-red-500 text-xs mt-1.5 ml-1">{addressError}</p>}
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h2 className="text-lg font-medium mb-6 text-gray-900 tracking-wide uppercase">2. Payment Method</h2>
+                <div className="space-y-3">
+                  <label className="flex items-center gap-4 text-gray-400 font-light text-sm p-4 rounded-xl border border-gray-100 bg-gray-50 cursor-not-allowed">
+                    <input type="radio" disabled /> <span>Cash on Delivery (Unavailable)</span>
+                  </label>
+
+                  <label className="flex items-center gap-4 text-gray-900 font-medium text-sm p-4 rounded-xl border border-accent/30 bg-accent/5 cursor-pointer hover:bg-accent/10 transition">
+                    <input type="radio" name="payment" value="UPI" onChange={(e)=>{setPayment(e.target.value); setPaymentError("");}} className="accent-accent w-4 h-4" /> 
+                    <span>UPI / Online Payment (Razorpay)</span>
+                  </label>
+
+                  <label className="flex items-center gap-4 text-gray-400 font-light text-sm p-4 rounded-xl border border-gray-100 bg-gray-50 cursor-not-allowed">
+                    <input type="radio" disabled /> <span>Debit / Credit Card (Coming soon)</span>
+                  </label>
+                </div>
+                {paymentError && <p className="text-red-500 text-xs mt-2 ml-1">{paymentError}</p>}
+              </div>
+            </motion.div>
+
+            {/* RIGHT - ORDER SUMMARY */}
+            <motion.div 
+               initial={{ opacity: 0, x: 20 }}
+               animate={{ opacity: 1, x: 0 }}
+               transition={{ delay: 0.2 }}
+               className="md:col-span-5"
+            >
+              <div className="bg-gray-50 border border-gray-200 rounded-3xl p-8 sticky top-32">
+                <h2 className="text-lg font-medium mb-8 text-gray-900 tracking-wide uppercase">Order Summary</h2>
+
+                {product ? (
+                  <div className="flex gap-6 mb-8 pb-8 border-b border-gray-200">
+                    <div className="w-20 h-24 bg-white rounded-lg border border-gray-100 flex items-center justify-center p-2 flex-shrink-0">
+                       <img src={product.image} alt={product.name} className="max-w-full max-h-full object-contain mix-blend-multiply" />
+                    </div>
+                    <div className="flex-1 flex flex-col justify-center">
+                      <h3 className="font-medium text-sm text-gray-900 mb-1">{product.name}</h3>
+                      <p className="text-gray-500 text-sm mb-4">₹{product.price}</p>
+                      
+                      {/* Quantity Minimal Modifier */}
+                      <div className="flex items-center gap-4 w-min border border-gray-300 rounded-full px-2 py-1">
+                        <button onClick={() => setQty(Math.max(1, qty - 1))} className="text-gray-500 hover:text-black w-6 text-center text-lg">−</button>
+                        <span className="text-sm font-medium w-4 text-center">{qty}</span>
+                        <button onClick={() => setQty(qty + 1)} className="text-gray-500 hover:text-black w-6 text-center text-lg">+</button>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="h-32 flex items-center justify-center border-b border-gray-200 mb-8 border-dashed">
+                      <p className="text-gray-400 text-sm font-light">Loading product...</p>
+                  </div>
+                )}
+
+                <div className="space-y-4 text-sm font-light text-gray-600 border-b border-gray-200 pb-8 mb-8">
+                  <div className="flex justify-between">
+                    <span>Subtotal</span>
+                    <span>₹{subtotal.toFixed(0)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Shipping</span>
+                    <span className="text-accent">Complimentary</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Taxes (GST 18%)</span>
+                    <span>₹{gstAmount.toFixed(0)}</span>
+                  </div>
+                </div>
+
+                <div className="flex justify-between font-medium text-lg text-gray-900 mb-8">
+                  <span>Total</span>
+                  <span>₹{total.toFixed(0)}</span>
+                </div>
+
+                {/* Desktop Button */}
+                <button
+                  onClick={handleOrder}
+                  disabled={!product}
+                  className={`hidden md:flex w-full py-4 items-center justify-center rounded-full bg-black text-white hover:bg-gray-800 transition shadow-lg hover:shadow-xl ${!product ? "opacity-50 cursor-not-allowed" : ""}`}
+                >
+                  <span className="text-sm font-medium tracking-widest uppercase">Place Order</span>
+                </button>
+              </div>
+            </motion.div>
+          </div>
 
           {/* Mobile Sticky Button */}
-          <div className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur border-t p-4 md:hidden">
+          <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 md:hidden z-40">
             <button
               onClick={handleOrder}
               disabled={!product}
-              className={`w-full py-4 text-lg rounded-xl bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899] text-white shadow-lg active:scale-95 transition ${!product ? "opacity-50 cursor-not-allowed" : ""}`}
+              className={`w-full py-4 text-sm font-medium tracking-widest uppercase rounded-full bg-black text-white shadow-xl active:scale-95 transition ${!product ? "opacity-50 cursor-not-allowed" : ""}`}
             >
-              Place Order ₹{total.toFixed(0)}
+              Checkout • ₹{total.toFixed(0)}
             </button>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -3,10 +3,12 @@
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { useEffect, useState } from "react";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import { motion, Variants } from "framer-motion";
 
 export default function ShopPage() {
   const router = useRouter();
-
   const [products, setProducts] = useState<any[]>([]);
 
   useEffect(() => {
@@ -29,146 +31,136 @@ export default function ShopPage() {
     return true;
   };
 
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+  };
+
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+  };
+
   return (
-    <div className="relative overflow-hidden min-h-screen bg-gradient-to-br from-[#fdfbfb] via-[#f3f4f6] to-[#e0e7ff] px-4 md:px-8 py-16">
-      {/* Background SVG */}
-      <svg className="absolute inset-0 w-full h-full opacity-20 pointer-events-none" viewBox="0 0 800 600" fill="none">
-        <circle cx="150" cy="150" r="200" fill="#c7d2fe" />
-        <circle cx="700" cy="400" r="250" fill="#fbcfe8" />
-      </svg>
-      {/* Heading */}
-      <div className="max-w-7xl mx-auto mb-12">
-        <h1 className="text-4xl md:text-6xl font-bold mb-4 text-gray-900 tracking-tight leading-tight">
-          Shop Products
-        </h1>
-        <p className="text-[#4B5563] text-lg md:text-xl max-w-2xl">
-          Discover skincare designed for real results.
-        </p>
-        <div className="w-24 h-1 bg-gradient-to-r from-indigo-500 to-pink-500 rounded-full mt-4"></div>
-      </div>
-
-      {/* Product Grid */}
-      <div className="max-w-7xl mx-auto">
-        {/* Mobile horizontal scroll */}
-        <div className="flex gap-4 overflow-x-auto pb-4 md:hidden snap-x snap-mandatory">
-          {products.map((product) => (
-            <div
-              key={product.id}
-              className="min-w-[85%] snap-center bg-white/90 backdrop-blur-md rounded-2xl ring-1 ring-gray-200 shadow-sm hover:shadow-2xl transition duration-500 overflow-hidden hover:-translate-y-1 animate-[fadeIn_0.6s_ease]"
-            >
-              {/* Image */}
-              <div className="h-[280px] bg-gradient-to-br from-indigo-50 to-pink-50 relative overflow-hidden group">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="absolute inset-0 h-full w-full object-contain transition duration-500"
-                />
-              </div>
-
-              {/* Content */}
-              <div className="p-5">
-                <h2 className="text-xl font-semibold mb-2 text-gray-900">
-                  {product.name}
-                </h2>
-
-                {/* Pricing */}
-                <div className="flex items-center gap-3 mb-4">
-                  <span className="text-xl font-semibold text-gray-900">
-                    ₹{product.price}
-                  </span>
-                  <span className="text-[#4B5563] line-through">
-                    ₹{product.original_price}
-                  </span>
-                  <span className="text-green-600 text-sm font-semibold">
-                    {Math.round(
-                      ((product.original_price - product.price) /
-                        product.original_price) *
-                        100
-                    )}
-                    % OFF
-                  </span>
-                </div>
-
-                {/* Button */}
-                <button
-                  onClick={async () => {
-                    const ok = await requireAuth();
-                    if (!ok) return;
-
-                    localStorage.setItem("checkoutProduct", JSON.stringify(product));
-                    router.push("/checkout");
-                  }}
-                  className="w-full py-4 text-base bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899] text-white rounded-xl shadow-md shadow-purple-300/40 hover:shadow-lg hover:scale-[1.02] active:scale-95 transition duration-300"
-                >
-                  Buy Now
-                </button>
-              </div>
-            </div>
-          ))}
+    <>
+      <Navbar />
+      <div className="min-h-screen bg-background pt-32 pb-24">
+        
+        {/* Heading */}
+        <div className="max-w-7xl mx-auto px-6 mb-16 md:mb-24 text-center md:text-left">
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-accent tracking-[0.2em] font-medium text-sm mb-4 uppercase"
+          >
+            The Collection
+          </motion.p>
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="text-4xl md:text-6xl font-light mb-6 text-gray-900 tracking-tight"
+          >
+            Curated Formulations
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-gray-500 text-lg md:text-xl font-light max-w-xl"
+          >
+            Discover our science-backed skincare designed for visible, lasting results. Each product is formulated with intention.
+          </motion.p>
         </div>
 
-        {/* Desktop grid */}
-        <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-8">
-          {products.map((product) => (
-            <div
-              key={product.id}
-              className="bg-white/90 backdrop-blur-md rounded-2xl ring-1 ring-gray-200 shadow-sm hover:shadow-2xl transition duration-500 overflow-hidden hover:-translate-y-1 animate-[fadeIn_0.6s_ease]"
-            >
-              {/* Image */}
-              <div className="h-[280px] bg-gradient-to-br from-indigo-50 to-pink-50 relative overflow-hidden group">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="absolute inset-0 h-full w-full object-contain transition duration-500"
-                />
-              </div>
-
-              {/* Content */}
-              <div className="p-5">
-                <h2 className="text-xl font-semibold mb-2 text-gray-900">
-                  {product.name}
-                </h2>
-
-                <div className="flex items-center gap-3 mb-4">
-                  <span className="text-xl font-semibold text-gray-900">
-                    ₹{product.price}
-                  </span>
-                  <span className="text-[#4B5563] line-through">
-                    ₹{product.original_price}
-                  </span>
-                  <span className="text-green-600 text-sm font-semibold">
-                    {Math.round(
-                      ((product.original_price - product.price) /
-                        product.original_price) *
-                        100
-                    )}
-                    % OFF
-                  </span>
+        {/* Product Grid */}
+        <div className="max-w-7xl mx-auto px-6">
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16"
+          >
+            {products.map((product) => (
+              <motion.div
+                variants={itemVariants}
+                key={product.id}
+                className="group flex flex-col"
+              >
+                {/* Image */}
+                <div className="w-full aspect-[4/5] bg-[#f8f7f5] rounded-2xl relative overflow-hidden mb-6 flex items-center justify-center group-hover:bg-[#f0ece5] transition-colors duration-500">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-[60%] h-[60%] object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-700 ease-out"
+                  />
+                  {/* Hover Add to Bag Overlay */}
+                  <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
+                     <button
+                        onClick={async () => {
+                          const ok = await requireAuth();
+                          if (!ok) return;
+                          localStorage.setItem("checkoutProduct", JSON.stringify(product));
+                          router.push("/checkout");
+                        }}
+                        className="translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 bg-white text-black px-8 py-3 rounded-full text-sm font-medium tracking-wide shadow-lg hover:shadow-xl hover:scale-105"
+                     >
+                        Quick Add
+                     </button>
+                  </div>
                 </div>
 
-                <button
-                  onClick={async () => {
-                    const ok = await requireAuth();
-                    if (!ok) return;
+                {/* Content */}
+                <div className="px-2">
+                  <div className="flex justify-between items-start mb-2">
+                    <h2 className="text-xl font-light tracking-wide text-gray-900">
+                      {product.name}
+                    </h2>
+                    <span className="text-lg font-medium text-gray-900">
+                      ₹{product.price}
+                    </span>
+                  </div>
 
-                    localStorage.setItem("checkoutProduct", JSON.stringify(product));
-                    router.push("/checkout");
-                  }}
-                  className="w-full py-4 text-base bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#ec4899] text-white rounded-xl shadow-md shadow-purple-300/40 hover:shadow-lg hover:scale-[1.02] active:scale-95 transition duration-300"
-                >
-                  Buy Now
-                </button>
-              </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-gray-400 line-through text-sm">
+                      ₹{product.original_price}
+                    </span>
+                    <span className="text-accent text-xs font-semibold tracking-wider uppercase">
+                      {Math.round(
+                        ((product.original_price - product.price) /
+                          product.original_price) *
+                          100
+                      )}
+                      % OFF
+                    </span>
+                  </div>
+                  
+                  {/* Mobile Add to Bag (since hover overlay isn't active on touch) */}
+                  <button
+                    onClick={async () => {
+                      const ok = await requireAuth();
+                      if (!ok) return;
+
+                      localStorage.setItem("checkoutProduct", JSON.stringify(product));
+                      router.push("/checkout");
+                    }}
+                    className="md:hidden mt-6 w-full py-3.5 bg-black text-white rounded-full text-sm font-medium tracking-wider uppercase active:scale-95 transition"
+                  >
+                    Add to Edit
+                  </button>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+          
+          {products.length === 0 && (
+            <div className="flex justify-center items-center py-32">
+               <div className="w-10 h-10 border-2 border-accent border-t-transparent rounded-full animate-spin" />
             </div>
-          ))}
+          )}
         </div>
       </div>
-      <style jsx>{`
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-`}</style>
-    </div>
+      <Footer />
+    </>
   );
 }
