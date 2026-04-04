@@ -51,7 +51,7 @@ export default function ShopPage() {
           <motion.p 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-accent tracking-[0.2em] font-medium text-sm mb-4 uppercase"
+            className="text-primary tracking-[0.2em] font-bold text-sm mb-4 uppercase"
           >
             The Collection
           </motion.p>
@@ -59,7 +59,7 @@ export default function ShopPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-4xl md:text-6xl font-light mb-6 text-gray-900 tracking-tight"
+            className="text-4xl md:text-6xl font-poppins font-bold mb-6 text-foreground tracking-tight"
           >
             Curated Formulations
           </motion.h1>
@@ -67,7 +67,7 @@ export default function ShopPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-gray-500 text-lg md:text-xl font-light max-w-xl"
+            className="text-foreground/70 text-lg md:text-xl font-medium max-w-xl"
           >
             Discover our science-backed skincare designed for visible, lasting results. Each product is formulated with intention.
           </motion.p>
@@ -88,14 +88,14 @@ export default function ShopPage() {
                 className="group flex flex-col"
               >
                 {/* Image */}
-                <div className="w-full aspect-[4/5] bg-[#f8f7f5] rounded-2xl relative overflow-hidden mb-6 flex items-center justify-center group-hover:bg-[#f0ece5] transition-colors duration-500">
+                <div className="w-full aspect-[4/5] glass rounded-2xl relative overflow-hidden mb-6 flex items-center justify-center p-4">
                   <img
                     src={product.image}
                     alt={product.name}
-                    className="w-[60%] h-[60%] object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-700 ease-out"
+                    className="w-[60%] h-[60%] object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-700 ease-out drop-shadow-md"
                   />
                   {/* Hover Add to Bag Overlay */}
-                  <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
+                  <div className="absolute inset-0 bg-background/20 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
                      <button
                         onClick={async () => {
                           const ok = await requireAuth();
@@ -103,7 +103,7 @@ export default function ShopPage() {
                           localStorage.setItem("checkoutProduct", JSON.stringify(product));
                           router.push("/checkout");
                         }}
-                        className="translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 bg-white text-black px-8 py-3 rounded-full text-sm font-medium tracking-wide shadow-lg hover:shadow-xl hover:scale-105"
+                        className="translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 bg-primary text-white hover:bg-orange-600 px-8 py-3 rounded-full text-sm font-bold tracking-wide shadow-xl hover:scale-105"
                      >
                         Quick Add
                      </button>
@@ -113,19 +113,19 @@ export default function ShopPage() {
                 {/* Content */}
                 <div className="px-2">
                   <div className="flex justify-between items-start mb-2">
-                    <h2 className="text-xl font-light tracking-wide text-gray-900">
+                    <h2 className="text-xl font-poppins font-bold tracking-wide text-foreground">
                       {product.name}
                     </h2>
-                    <span className="text-lg font-medium text-gray-900">
+                    <span className="text-lg font-poppins font-bold text-foreground">
                       ₹{product.price}
                     </span>
                   </div>
 
                   <div className="flex items-center gap-3">
-                    <span className="text-gray-400 line-through text-sm">
+                    <span className="text-foreground/50 line-through text-sm">
                       ₹{product.original_price}
                     </span>
-                    <span className="text-accent text-xs font-semibold tracking-wider uppercase">
+                    <span className="text-pink-accent text-xs font-bold tracking-wider uppercase">
                       {Math.round(
                         ((product.original_price - product.price) /
                           product.original_price) *
@@ -144,7 +144,7 @@ export default function ShopPage() {
                       localStorage.setItem("checkoutProduct", JSON.stringify(product));
                       router.push("/checkout");
                     }}
-                    className="md:hidden mt-6 w-full py-3.5 bg-black text-white rounded-full text-sm font-medium tracking-wider uppercase active:scale-95 transition"
+                    className="md:hidden mt-6 w-full py-3.5 bg-primary text-white rounded-full text-sm font-bold tracking-wider uppercase active:scale-95 transition"
                   >
                     Add to Edit
                   </button>
@@ -155,7 +155,7 @@ export default function ShopPage() {
           
           {products.length === 0 && (
             <div className="flex justify-center items-center py-32">
-               <div className="w-10 h-10 border-2 border-accent border-t-transparent rounded-full animate-spin" />
+               <div className="w-10 h-10 border-2 border-primary border-t-transparent rounded-full animate-spin" />
             </div>
           )}
         </div>

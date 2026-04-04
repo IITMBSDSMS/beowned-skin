@@ -55,7 +55,7 @@ export default function Home() {
   };
 
   return (
-    <main className="bg-background text-foreground selection:bg-accent/30 selection:text-black">
+    <main className="bg-background text-foreground selection:bg-primary/30 selection:text-white font-inter">
       
       <Navbar />
       <HeroSlider />
@@ -71,7 +71,7 @@ export default function Home() {
           transition={{ duration: 1, ease: "easeOut" }}
           className="flex justify-center relative"
         >
-          <div className="absolute inset-0 bg-accent/20 rounded-full blur-[100px] z-0" />
+          <div className="absolute inset-0 bg-primary/20 rounded-full blur-[100px] z-0" />
           <motion.img
             animate={{ y: [0, -15, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
@@ -88,32 +88,32 @@ export default function Home() {
           viewport={{ once: true, margin: "-100px" }}
           variants={staggerContainer}
         >
-          <motion.p variants={fadeInUp} className="text-accent tracking-[0.2em] font-medium text-sm mb-4 uppercase">
+          <motion.p variants={fadeInUp} className="text-primary tracking-[0.2em] font-medium text-sm mb-4 uppercase">
             The Essentials Collection
           </motion.p>
-          <motion.h2 variants={fadeInUp} className="text-4xl md:text-6xl font-light mb-8 tracking-tight leading-tight text-gray-900">
+          <motion.h2 variants={fadeInUp} className="text-4xl md:text-6xl font-poppins font-bold mb-8 tracking-tight leading-tight text-foreground">
             Niacinamide 10% <br/> Serum
           </motion.h2>
 
-          <motion.p variants={fadeInUp} className="text-gray-500 mb-8 text-lg font-light leading-relaxed max-w-md">
+          <motion.p variants={fadeInUp} className="text-foreground/70 mb-8 text-lg font-medium leading-relaxed max-w-md">
             A lightweight, active-rich formula designed to seamlessly regulate oil production, powerfully strengthen the delicate skin barrier, and instantly soothe redness.
           </motion.p>
 
-          <motion.div variants={fadeInUp} className="mb-10 space-y-4 text-gray-600 font-light">
-            <div className="flex items-center gap-3"><span className="text-accent text-xl">✦</span> Controls excess oil & refines pores</div>
-            <div className="flex items-center gap-3"><span className="text-accent text-xl">✦</span> Improves overall skin texture</div>
-            <div className="flex items-center gap-3"><span className="text-accent text-xl">✦</span> Instantly reduces redness</div>
+          <motion.div variants={fadeInUp} className="mb-10 space-y-4 text-foreground/80 font-medium tracking-wide">
+            <div className="flex items-center gap-3"><span className="text-primary text-xl">✦</span> Controls excess oil & refines pores</div>
+            <div className="flex items-center gap-3"><span className="text-primary text-xl">✦</span> Improves overall skin texture</div>
+            <div className="flex items-center gap-3"><span className="text-primary text-xl">✦</span> Instantly reduces redness</div>
           </motion.div>
 
           <motion.div variants={fadeInUp} className="flex items-center gap-8">
-            <span className="text-3xl font-light tracking-wide text-gray-900">₹699</span>
+            <span className="text-3xl font-poppins font-bold tracking-tight text-foreground">₹699</span>
             <button
               onClick={async () => {
                 const ok = await requireAuth();
                 if (!ok) return;
                 router.push("/shop");
               }}
-              className="px-10 py-4 bg-gray-900 text-white rounded-full shadow-xl hover:bg-accent transition-all duration-300 font-medium tracking-wide hover:-translate-y-1 hover:shadow-accent/30"
+              className="px-10 py-4 bg-primary text-white rounded-full shadow-lg hover:bg-orange-600 transition-all duration-300 font-bold tracking-wide hover:-translate-y-1 hover:shadow-primary/30"
             >
               Add to Edit
             </button>
@@ -123,8 +123,8 @@ export default function Home() {
       </section>
 
       {/* --- BENEFITS SECTION --- */}
-      <section className="bg-[#fcfcfb] py-24 md:py-32 border-y border-gray-100 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3" />
+      <section className="bg-background py-24 md:py-32 border-y border-foreground/5 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3" />
         
         <div className="max-w-7xl mx-auto px-6 relative z-10 text-center">
           <motion.h2 
@@ -132,7 +132,7 @@ export default function Home() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="text-3xl md:text-5xl font-light mb-16 tracking-tight text-gray-900"
+            className="text-3xl md:text-5xl font-poppins font-bold mb-16 tracking-tight text-foreground"
           >
             Why Your Skin Craves This
           </motion.h2>
@@ -152,15 +152,15 @@ export default function Home() {
               <motion.div 
                 key={i} 
                 variants={fadeInUp}
-                className="group bg-white/60 backdrop-blur-3xl border border-white/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-10 rounded-3xl hover:-translate-y-2 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-500"
+                className="group glass p-10 rounded-2xl hover:-translate-y-2 transition-all duration-500"
               >
-                <div className="w-16 h-16 mx-auto bg-accent/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-accent/20 transition-all duration-500">
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-accent">
+                <div className="w-16 h-16 mx-auto bg-pink-light rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-pink-light/80 transition-all duration-500">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-pink-accent">
                     <path d={feature.icon} />
                   </svg>
                 </div>
-                <h3 className="text-xl mb-3 font-medium text-gray-800 tracking-wide">{feature.title}</h3>
-                <p className="text-gray-500 font-light leading-relaxed">
+                <h3 className="text-xl mb-3 font-poppins font-bold text-foreground tracking-wide">{feature.title}</h3>
+                <p className="text-foreground/70 font-medium leading-relaxed">
                   {feature.desc}
                 </p>
               </motion.div>
@@ -181,11 +181,11 @@ export default function Home() {
            transition={{ duration: 1 }}
            className="relative flex justify-center group"
         >
-          <div className="absolute inset-0 bg-gradient-to-tr from-accent/20 to-transparent w-full h-[500px] rounded-full blur-[80px] -z-10" />
+          <div className="absolute inset-0 bg-gradient-to-tr from-blue-bg to-transparent w-full h-[500px] rounded-full blur-[80px] -z-10" />
           <motion.img
             src="/images/product.png"
             alt="product overlay"
-            className="w-[200px] md:w-[380px] drop-shadow-2xl transition-transform duration-700 group-hover:scale-105"
+            className="w-[200px] md:w-[380px] drop-shadow-lg transition-transform duration-700 group-hover:scale-105"
           />
         </motion.div>
 
@@ -196,7 +196,7 @@ export default function Home() {
            viewport={{ once: true }}
            variants={staggerContainer}
         >
-          <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-light mb-10 tracking-tight leading-tight">
+          <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-poppins font-bold mb-10 tracking-tight leading-tight text-foreground">
             Powered by Elements <br/> That Innovate
           </motion.h2>
 
@@ -206,15 +206,15 @@ export default function Home() {
               { name: "Zinc Complex", desc: "Instantly reduces inflammation & redness." },
               { name: "Barrier Matrix", desc: "Defends & deeply strengthens skin integrity." }
             ].map((item, i) => (
-              <motion.div key={i} variants={fadeInUp} className="flex gap-4 items-start border-b border-gray-100 pb-6">
-                <div className="mt-1 text-accent">
-                  <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <motion.div key={i} variants={fadeInUp} className="flex gap-4 items-start border-b border-foreground/10 pb-6">
+                <div className="mt-1 text-blue-accent bg-blue-bg p-2 rounded-full">
+                  <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
                 <div>
-                  <h4 className="text-xl font-medium tracking-wide text-gray-800 mb-1">{item.name}</h4>
-                  <p className="text-gray-500 font-light">{item.desc}</p>
+                  <h4 className="text-xl font-poppins font-bold tracking-wide text-foreground mb-1">{item.name}</h4>
+                  <p className="text-foreground/70 font-medium">{item.desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -224,9 +224,9 @@ export default function Home() {
       </section>
 
       {/* --- AI SKIN SCANNER SECTION --- */}
-      <section className="relative py-24 md:py-36 overflow-hidden bg-black text-white">
+      <section className="relative py-24 md:py-36 overflow-hidden bg-[#09090b] text-white">
         {/* Subtle background glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] max-w-[800px] max-h-[800px] bg-accent/20 rounded-full blur-[150px] pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] max-w-[800px] max-h-[800px] bg-primary/20 rounded-full blur-[150px] pointer-events-none" />
         
         <div className="max-w-7xl mx-auto px-6 relative z-10 text-center">
           <motion.div
@@ -235,11 +235,11 @@ export default function Home() {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <p className="text-accent tracking-[0.3em] font-medium text-sm mb-4 uppercase">Advanced Diagnostics</p>
-            <h2 className="text-4xl md:text-6xl font-light mb-6 tracking-tight">
+            <p className="text-primary tracking-[0.3em] font-medium text-sm mb-4 uppercase">Advanced Diagnostics</p>
+            <h2 className="text-4xl md:text-6xl font-poppins font-bold mb-6 tracking-tight">
               Visualize Your Glow
             </h2>
-            <p className="text-gray-400 mb-12 max-w-xl mx-auto font-light text-lg">
+            <p className="text-gray-400 mb-12 max-w-xl mx-auto font-medium text-lg">
               Upload or discreetly capture your skin to witness the instant transformation powered by our curated formulation insights.
             </p>
           </motion.div>
@@ -252,7 +252,7 @@ export default function Home() {
                className="flex flex-col items-center gap-6"
             >
               <label className="relative group cursor-pointer">
-                <div className="absolute -inset-1 rounded-2xl blur-md bg-gradient-to-r from-accent to-[#d8c3a1] opacity-60 group-hover:opacity-100 transition duration-500" />
+                <div className="absolute -inset-1 rounded-2xl blur-md bg-gradient-to-r from-primary to-[#d8c3a1] opacity-60 group-hover:opacity-100 transition duration-500" />
                 <div className="relative px-10 py-5 bg-[#111] text-white rounded-2xl flex items-center gap-3">
                   <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="1.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
@@ -292,10 +292,10 @@ export default function Home() {
 
               {/* BEFORE IMAGE (Original) */}
               <div
-                className="absolute top-0 left-0 h-full overflow-hidden border-r-[3px] border-accent"
+                className="absolute top-0 left-0 h-full overflow-hidden border-r-[3px] border-primary"
                 style={{ width: `${slider}%` }}
               >
-                <div className="absolute top-1/2 -translate-y-1/2 right-1 w-6 h-6 bg-accent rounded-full flex items-center justify-center shadow-lg transform translate-x-1/2 -mx-1 pointer-events-none z-10">
+                <div className="absolute top-1/2 -translate-y-1/2 right-1 w-6 h-6 bg-primary rounded-full flex items-center justify-center shadow-lg transform translate-x-1/2 -mx-1 pointer-events-none z-10">
                    <div className="w-1.5 h-1.5 bg-white rounded-full" />
                 </div>
                 <img
@@ -319,7 +319,7 @@ export default function Home() {
               <div className="absolute top-4 left-6 bg-black/60 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider border border-white/10 z-30 pointer-events-none">
                 BEFORE
               </div>
-              <div className="absolute top-4 right-6 bg-accent/90 text-white px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider shadow-lg z-30 pointer-events-none">
+              <div className="absolute top-4 right-6 bg-primary/90 text-white px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider shadow-lg z-30 pointer-events-none">
                 AFTER 14 DAYS
               </div>
 
@@ -329,13 +329,13 @@ export default function Home() {
       </section>
 
       {/* --- COMMUNITY REELS --- */}
-      <section className="py-24 md:py-36 bg-[#f9f8f6]">
+      <section className="py-24 md:py-36 bg-background">
         <div className="max-w-7xl mx-auto px-6">
           <motion.h2 
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-3xl md:text-5xl font-light mb-16 text-center tracking-tight text-gray-900"
+            className="text-3xl md:text-5xl font-poppins font-bold mb-16 text-center tracking-tight text-foreground"
           >
             The Be-Owned Routine in Action
           </motion.h2>
@@ -391,14 +391,14 @@ export default function Home() {
       </section>
 
       {/* --- TESTIMONIALS --- */}
-      <section className="py-24 md:py-36 bg-white overflow-hidden relative">
-        <div className="absolute top-0 left-0 w-[400px] h-[400px] bg-accent/5 rounded-full blur-[100px] -translate-x-1/2 -translate-y-1/2" />
+      <section className="py-24 md:py-36 bg-background overflow-hidden relative border-y border-foreground/5">
+        <div className="absolute top-0 left-0 w-[400px] h-[400px] bg-primary/5 rounded-full blur-[100px] -translate-x-1/2 -translate-y-1/2" />
         
         <div className="max-w-7xl mx-auto px-6 relative z-10 text-center">
           <motion.p 
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            className="text-accent tracking-[0.2em] font-medium text-sm mb-4 uppercase"
+            className="text-primary tracking-[0.2em] font-medium text-sm mb-4 uppercase"
           >
             Voices of Trust
           </motion.p>
@@ -406,7 +406,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-3xl md:text-5xl font-light mb-16 tracking-tight text-gray-900"
+            className="text-3xl md:text-5xl font-poppins font-bold mb-16 tracking-tight text-foreground"
           >
             What They Say
           </motion.h2>
@@ -420,15 +420,15 @@ export default function Home() {
             {testimonials.length > 0 ? testimonials.map((t: any, i) => (
               <SwiperSlide key={t.id || i}>
                 <div className="px-4 py-8">
-                   <div className="bg-gray-50/80 backdrop-blur-xl border border-gray-100 shadow-[0_8px_40px_rgba(0,0,0,0.03)] p-12 md:p-16 rounded-[2rem] text-center transition-all duration-300">
-                     <div className="text-accent/40 mb-8 inline-block">
+                   <div className="glass shadow-[0_8px_40px_rgba(0,0,0,0.03)] p-12 md:p-16 rounded-2xl text-center transition-all duration-300">
+                     <div className="text-primary/40 mb-8 inline-block">
                         <svg width="48" height="48" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" /></svg>
                      </div>
-                     <p className="text-gray-700 mb-8 text-xl md:text-2xl font-light leading-relaxed italic">
+                     <p className="text-foreground/80 mb-8 text-xl md:text-2xl font-medium leading-relaxed italic">
                        "{t.message}"
                      </p>
-                     <p className="text-sm text-gray-900 font-medium tracking-widest uppercase">
-                       {t.name} <span className="text-accent ml-2">Verified Purchase</span>
+                     <p className="text-sm text-foreground font-bold tracking-widest uppercase">
+                       {t.name} <span className="text-primary ml-2">Verified Purchase</span>
                      </p>
                    </div>
                 </div>
@@ -436,9 +436,9 @@ export default function Home() {
             )) : (
               <SwiperSlide>
                 <div className="px-4 py-8">
-                   <div className="bg-gray-50/80 backdrop-blur-xl border border-gray-100 shadow-sm p-12 md:p-16 rounded-[2rem] text-center">
-                     <p className="text-gray-500 font-light italic text-xl">"A transformative addition to my minimalist routine. The texture is divine and the results speak for themselves."</p>
-                     <p className="mt-8 text-sm text-gray-900 font-medium tracking-widest uppercase">Sarah L.</p>
+                   <div className="glass p-12 md:p-16 rounded-2xl text-center">
+                     <p className="text-foreground/80 font-medium italic text-xl">"A transformative addition to my minimalist routine. The texture is divine and the results speak for themselves."</p>
+                     <p className="mt-8 text-sm text-foreground font-bold tracking-widest uppercase">Sarah L.</p>
                    </div>
                 </div>
               </SwiperSlide>
@@ -448,10 +448,10 @@ export default function Home() {
       </section>
 
       {/* --- FINAL CTA & APP BANNER --- */}
-      <section className="relative overflow-hidden py-24 md:py-36 text-center bg-gray-900 text-white">
+      <section className="relative overflow-hidden py-24 md:py-36 text-center bg-[#09090b] text-white">
         <div className="absolute inset-0 z-0">
-           <div className="absolute inset-0 bg-gradient-to-t from-black via-gray-900 to-gray-800" />
-           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[600px] bg-accent/10 rounded-full blur-[120px]" />
+           <div className="absolute inset-0 bg-gradient-to-t from-black via-[#09090b] to-black opacity-80" />
+           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[600px] bg-primary/20 rounded-full blur-[120px]" />
         </div>
 
         <motion.div 
@@ -461,27 +461,27 @@ export default function Home() {
           transition={{ duration: 0.8 }}
           className="relative z-10 max-w-4xl mx-auto px-6"
         >
-          <h2 className="text-4xl md:text-6xl font-light mb-8 tracking-tight">
+          <h2 className="text-4xl md:text-6xl font-poppins font-bold mb-8 tracking-tight text-white">
             Unlock Your Deepest Glow
           </h2>
-          <p className="text-gray-400 mb-12 max-w-2xl mx-auto text-lg md:text-xl font-light leading-relaxed">
+          <p className="text-white/70 mb-12 max-w-2xl mx-auto text-lg md:text-xl font-medium leading-relaxed">
             Take our bespoke AI skin diagnostic and embark on a personalized journey toward transformative skin health.
           </p>
           <button
             onClick={() => router.push("/beowned-ai")}
-            className="px-10 py-5 bg-white text-black rounded-full text-lg font-medium tracking-wide shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:shadow-[0_0_60px_rgba(255,255,255,0.4)] hover:-translate-y-1 transition-all duration-300 mb-20"
+            className="px-10 py-5 bg-primary text-white rounded-full text-lg font-bold tracking-wide shadow-xl hover:bg-orange-600 hover:-translate-y-1 hover:shadow-primary/30 transition-all duration-300 mb-20"
           >
             Launch Diagnostics
           </button>
 
-          <div className="pt-20 border-t border-gray-800">
-            <h3 className="text-sm font-semibold tracking-[0.2em] text-gray-500 uppercase mb-8">
+          <div className="pt-20 border-t border-white/10">
+            <h3 className="text-sm font-bold tracking-[0.2em] text-white/50 uppercase mb-8">
               Experience the App Soon
             </h3>
             
             <div className="flex justify-center gap-6 flex-wrap">
               {/* PLAY STORE */}
-              <button className="flex items-center gap-4 bg-black/40 border border-gray-700 hover:border-accent hover:bg-gray-800 transition-all duration-300 px-8 py-4 rounded-2xl group relative overflow-hidden">
+              <button className="flex items-center gap-4 bg-black/40 border border-white/10 hover:border-primary hover:bg-white/5 transition-all duration-300 px-8 py-4 rounded-2xl group relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-[150%] group-hover:translate-x-[150%] transition-transform duration-700" />
                 <svg width="28" height="28" viewBox="0 0 512 512" fill="none">
                   <path d="M325.3 234.3L104.6 13.6C96.5 5.5 82.7 11.3 82.7 22.9V489.1C82.7 500.7 96.5 506.5 104.6 498.4L325.3 277.7C333.3 269.7 333.3 242.3 325.3 234.3Z" fill="#34A853"/>
@@ -493,7 +493,7 @@ export default function Home() {
               </button>
 
               {/* APP STORE */}
-              <button className="flex items-center gap-4 bg-black/40 border border-gray-700 hover:border-accent hover:bg-gray-800 transition-all duration-300 px-8 py-4 rounded-2xl group relative overflow-hidden">
+              <button className="flex items-center gap-4 bg-black/40 border border-white/10 hover:border-primary hover:bg-white/5 transition-all duration-300 px-8 py-4 rounded-2xl group relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-[150%] group-hover:translate-x-[150%] transition-transform duration-700" />
                 <svg width="28" height="28" viewBox="0 0 384 512" fill="none">
                   <path d="M318.7 268.7c-.2-48.2 39.4-71.3 41.1-72.3-22.5-32.9-57.6-37.4-70-37.9-29.8-3-58.1 17.5-73.2 17.5-15.1 0-38.4-17.1-63.2-16.6-32.5.5-62.5 18.9-79.2 48-33.8 58.6-8.6 145.5 24.3 192.9 16.1 23.3 35.3 49.4 60.5 48.5 24.3-1 33.5-15.7 62.9-15.7 29.4 0 37.7 15.7 63.4 15.2 26.2-.5 42.8-23.9 58.8-47.3 18.4-26.8 26-52.7 26.4-54.1-.6-.3-50.6-19.4-50.8-77.9z" fill="#fff"/>

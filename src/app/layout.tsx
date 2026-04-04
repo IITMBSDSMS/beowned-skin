@@ -1,53 +1,55 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import Script from "next/script";
-import "./globals.css";
+import type { Metadata } from 'next';
+import { Poppins, Inter } from 'next/font/google';
+import Script from 'next/script';
+import './globals.css';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const poppins = Poppins({
+  variable: '--font-poppins',
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const inter = Inter({
+  variable: '--font-inter',
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
 });
 
 export const metadata: Metadata = {
-  title: "Be-Owned Skin | Science-Based Skincare",
+  title: 'Be-Owned Skin | Science-Based Skincare',
   description:
-    "Premium skincare powered by science. Niacinamide serum for oil control, glowing skin, and barrier repair.",
+    'Premium skincare powered by science. Niacinamide serum for oil control, glowing skin, and barrier repair.',
   keywords: [
-    "skincare",
-    "niacinamide serum",
-    "glowing skin",
-    "oil control serum",
-    "beowned skin",
+    'skincare',
+    'niacinamide serum',
+    'glowing skin',
+    'oil control serum',
+    'beowned skin',
   ],
-  authors: [{ name: "Be-Owned Skin" }],
-  creator: "Be-Owned Skin",
-  metadataBase: new URL("https://beownedskin.com"),
+  authors: [{ name: 'Be-Owned Skin' }],
+  creator: 'Be-Owned Skin',
+  metadataBase: new URL('https://beownedskin.com'),
 
   openGraph: {
-    title: "Be-Owned Skin",
-    description: "Science-backed skincare for balanced, glowing skin.",
-    url: "https://beownedskin.com",
-    siteName: "Be-Owned Skin",
+    title: 'Be-Owned Skin',
+    description: 'Science-backed skincare for balanced, glowing skin.',
+    url: 'https://beownedskin.com',
+    siteName: 'Be-Owned Skin',
     images: [
       {
-        url: "/images/product.png",
+        url: '/images/product.png',
         width: 1200,
         height: 630,
       },
     ],
-    type: "website",
+    type: 'website',
   },
 
   twitter: {
-    card: "summary_large_image",
-    title: "Be-Owned Skin",
-    description: "Science-backed skincare for balanced skin",
-    images: ["/images/product.png"],
+    card: 'summary_large_image',
+    title: 'Be-Owned Skin',
+    description: 'Science-backed skincare for balanced skin',
+    images: ['/images/product.png'],
   },
 };
 
@@ -59,9 +61,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${poppins.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="font-inter min-h-full flex flex-col">
         {children}
         <Script
           src="https://checkout.razorpay.com/v1/checkout.js"
