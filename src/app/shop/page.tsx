@@ -53,7 +53,7 @@ export default function ShopPage() {
             animate={{ opacity: 1 }}
             className="text-primary tracking-[0.2em] font-bold text-sm mb-4 uppercase"
           >
-            The Collection
+            Pre-Booking Collection
           </motion.p>
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
@@ -105,7 +105,7 @@ export default function ShopPage() {
                         }}
                         className="translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 bg-primary text-white hover:bg-orange-600 px-8 py-3 rounded-full text-sm font-bold tracking-wide shadow-xl hover:scale-105"
                      >
-                        Quick Add
+                        Pre-Book Now
                      </button>
                   </div>
                 </div>
@@ -146,7 +146,7 @@ export default function ShopPage() {
                     }}
                     className="md:hidden mt-6 w-full py-3.5 bg-primary text-white rounded-full text-sm font-bold tracking-wider uppercase active:scale-95 transition"
                   >
-                    Add to Edit
+                    Pre-Book Now
                   </button>
                 </div>
               </motion.div>

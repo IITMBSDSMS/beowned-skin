@@ -170,7 +170,7 @@ export default function AdminDashboard() {
                  tab === t ? "bg-white text-black shadow-lg" : "text-gray-400 hover:text-white hover:bg-white/5"
                }`}
              >
-               {t}
+               {t === "products" ? "Pre-Booking Items" : t}
              </button>
            ))}
          </div>
@@ -249,8 +249,8 @@ export default function AdminDashboard() {
               <div className="space-y-12">
                 <section className="bg-[#111] border border-white/5 p-8 rounded-2xl flex flex-col md:flex-row gap-10">
                   <div className="flex-1 space-y-4">
-                     <h2 className="text-lg text-white font-medium mb-6">Add Inventory</h2>
-                     <input placeholder="Formulation Name" value={name} onChange={(e) => setName(e.target.value)} className="w-full bg-black/50 border border-white/10 p-4 rounded-xl text-sm text-white focus:outline-none focus:border-accent transition-colors" />
+                     <h2 className="text-lg text-white font-medium mb-6">Add Pre-Booking Item</h2>
+                     <input placeholder="Item Name" value={name} onChange={(e) => setName(e.target.value)} className="w-full bg-black/50 border border-white/10 p-4 rounded-xl text-sm text-white focus:outline-none focus:border-accent transition-colors" />
                      <div className="grid grid-cols-2 gap-4">
                         <input placeholder="Current Price (₹)" value={price} onChange={(e) => setPrice(e.target.value)} className="bg-black/50 border border-white/10 p-4 rounded-xl text-sm text-white focus:outline-none focus:border-accent transition-colors" />
                         <input placeholder="Original MSRP (₹)" value={originalPrice} onChange={(e) => setOriginalPrice(e.target.value)} className="bg-black/50 border border-white/10 p-4 rounded-xl text-sm text-white focus:outline-none focus:border-accent transition-colors" />
@@ -260,7 +260,7 @@ export default function AdminDashboard() {
                      <input type="file" accept="image/*" onChange={(e) => setProductFile(e.target.files?.[0] || null)} className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:uppercase file:bg-white/10 file:text-white cursor-pointer" />
                      
                      <button onClick={addProduct} className="w-full mt-4 bg-white text-black py-4 rounded-xl text-sm font-semibold tracking-widest uppercase hover:bg-gray-200 transition">
-                        Insert New Product
+                        Insert Pre-Booking Item
                      </button>
                   </div>
                   <div className="md:w-64 border border-white/5 bg-black rounded-xl p-4 flex flex-col items-center justify-center min-h-[250px] text-gray-600">

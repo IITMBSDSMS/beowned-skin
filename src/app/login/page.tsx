@@ -19,9 +19,17 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background relative overflow-hidden px-6">
       
-      {/* Subtle Background Glows */}
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-accent/10 rounded-full blur-[150px] pointer-events-none -translate-y-1/2 translate-x-1/2" />
-      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[150px] pointer-events-none translate-y-1/2 -translate-x-1/2" />
+      {/* Subtle Background Glows (Animated) */}
+      <motion.div 
+        animate={{ scale: [1, 1.05, 1], opacity: [0.5, 0.8, 0.5] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#e6e2df] rounded-full blur-[150px] pointer-events-none -translate-y-1/2 translate-x-1/2" 
+      />
+      <motion.div 
+        animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.6, 0.3] }}
+        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#d5cfca] rounded-full blur-[150px] pointer-events-none translate-y-1/2 -translate-x-1/2" 
+      />
 
       {/* Login Card */}
       <motion.div 
@@ -43,10 +51,30 @@ export default function Login() {
         </div>
 
         {/* Branding */}
-        <div className="flex justify-center mb-10 mt-6">
-          <div className="w-14 h-14 rounded-full bg-accent/10 border border-accent/20 text-accent flex items-center justify-center text-xl italic font-light">
-            B
-          </div>
+        <div className="flex flex-col items-center justify-center mb-10 mt-6 select-none">
+          <motion.div 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-[3.5rem] leading-none font-normal text-black tracking-tight"
+            style={{ fontFamily: "Inter, sans-serif" }}
+          >
+            Be.
+          </motion.div>
+          <motion.div 
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
+            className="w-24 h-[1.5px] bg-black my-2"
+          ></motion.div>
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            className="text-[11px] font-medium tracking-[0.2em] text-black uppercase"
+          >
+            BE - OWNED SKIN
+          </motion.div>
         </div>
 
         {/* Heading */}

@@ -22,22 +22,32 @@ export default function AboutPage() {
         
         {/* HERO SECTION */}
         <section className="px-6 md:px-20 py-16 md:py-24 max-w-7xl mx-auto flex flex-col items-center text-center">
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, ease: "easeOut" }}
-            className="mb-10 w-24 h-24 bg-accent/10 rounded-full flex items-center justify-center border border-accent/20"
-          >
-             <span className="text-3xl font-light text-accent italic">B</span>
-          </motion.div>
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-4xl md:text-7xl font-light mb-8 tracking-[0.1em] uppercase text-gray-900"
-          >
-            Be-Owned <br className="hidden md:block"/> Skin
-          </motion.h1>
+          {/* Branding (Matching Login Page) */}
+          <div className="flex flex-col items-center justify-center mb-10 select-none">
+            <motion.div 
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="text-[4.5rem] md:text-[6rem] leading-none font-normal text-black tracking-tight"
+              style={{ fontFamily: "Inter, sans-serif" }}
+            >
+              Be.
+            </motion.div>
+            <motion.div 
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
+              className="w-32 md:w-40 h-[2px] bg-black my-4 md:my-5"
+            ></motion.div>
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              className="text-[13px] md:text-[15px] font-medium tracking-[0.2em] text-black uppercase"
+            >
+              BE - OWNED SKIN
+            </motion.div>
+          </div>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

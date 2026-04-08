@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -86,14 +87,13 @@ export default function Navbar() {
                 onClick={() => router.push("/profile")}
                 className="flex items-center gap-2 relative group"
               >
-                <div className="w-9 h-9 p-[2px] rounded-full border border-gray-200 dark:border-gray-800 group-hover:border-primary transition-colors">
-                  <img
+                <div className="w-9 h-9 p-[2px] rounded-full border border-gray-200 dark:border-gray-800 group-hover:border-primary transition-colors relative overflow-hidden">
+                  <Image
                     alt="User Profile"
                     src={user.user_metadata?.avatar_url || "https://ui-avatars.com/api/?name=User"}
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src = "https://ui-avatars.com/api/?name=User";
-                    }}
-                    className="w-full h-full rounded-full object-cover"
+                    fill
+                    sizes="36px"
+                    className="rounded-full object-cover"
                   />
                 </div>
               </button>

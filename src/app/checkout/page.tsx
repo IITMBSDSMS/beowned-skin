@@ -153,7 +153,7 @@ export default function CheckoutPage() {
             animate={{ opacity: 1, y: 0 }}
             className="mb-12 text-center md:text-left"
           >
-            <h1 className="text-3xl md:text-5xl font-light tracking-tight text-gray-900">Secure Checkout</h1>
+            <h1 className="text-3xl md:text-5xl font-light tracking-tight text-gray-900">Pre-Booking Checkout</h1>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-20">
@@ -318,7 +318,7 @@ export default function CheckoutPage() {
                   disabled={!product}
                   className={`hidden md:flex w-full py-4 items-center justify-center rounded-full bg-black text-white hover:bg-gray-800 transition shadow-lg hover:shadow-xl ${!product ? "opacity-50 cursor-not-allowed" : ""}`}
                 >
-                  <span className="text-sm font-medium tracking-widest uppercase">Place Order</span>
+                  <span className="text-sm font-medium tracking-widest uppercase">Confirm Pre-Booking</span>
                 </button>
               </div>
             </motion.div>
@@ -331,7 +331,7 @@ export default function CheckoutPage() {
               disabled={!product}
               className={`w-full py-4 text-sm font-medium tracking-widest uppercase rounded-full bg-black text-white shadow-xl active:scale-95 transition ${!product ? "opacity-50 cursor-not-allowed" : ""}`}
             >
-              Checkout • ₹{total.toFixed(0)}
+              Pre-Book • ₹{total.toFixed(0)}
             </button>
           </div>
         </div>

@@ -4,6 +4,7 @@ import HeroSlider from "./components/HeroSlider";
 import Footer from "./components/Footer";
 
 import { supabase } from "@/lib/supabase";
+import Image from "next/image";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
@@ -71,14 +72,22 @@ export default function Home() {
           transition={{ duration: 1, ease: "easeOut" }}
           className="flex justify-center relative"
         >
-          <div className="absolute inset-0 bg-primary/20 rounded-full blur-[100px] z-0" />
-          <motion.img
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,theme(colors.primary.DEFAULT/30%)_0%,transparent_70%)] rounded-full z-0 pointer-events-none" />
+          <motion.div
             animate={{ y: [0, -15, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            src="/images/product.png"
-            alt="Niacinamide Serum"
-            className="w-[280px] md:w-[480px] drop-shadow-2xl z-10"
-          />
+            style={{ willChange: "transform", WebkitTransform: "translateZ(0)" }}
+            className="w-[280px] md:w-[480px] drop-shadow-2xl z-10 relative"
+          >
+            <Image
+              src="/images/product.png"
+              alt="Niacinamide Serum"
+              width={480}
+              height={600}
+              priority
+              className="w-full h-auto object-contain"
+            />
+          </motion.div>
         </motion.div>
 
         {/* RIGHT - PRODUCT INFO */}
@@ -123,8 +132,8 @@ export default function Home() {
       </section>
 
       {/* --- BENEFITS SECTION --- */}
-      <section className="bg-background py-24 md:py-32 border-y border-foreground/5 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3" />
+      <section className="bg-background py-24 md:py-32 border-y border-foreground/5 relative overflow-hidden text-center md:text-left">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[radial-gradient(circle_at_center,theme(colors.primary.DEFAULT/10%)_0%,transparent_70%)] rounded-full -translate-y-1/2 translate-x-1/3 pointer-events-none" />
         
         <div className="max-w-7xl mx-auto px-6 relative z-10 text-center">
           <motion.h2 
@@ -181,12 +190,19 @@ export default function Home() {
            transition={{ duration: 1 }}
            className="relative flex justify-center group"
         >
-          <div className="absolute inset-0 bg-gradient-to-tr from-blue-bg to-transparent w-full h-[500px] rounded-full blur-[80px] -z-10" />
-          <motion.img
-            src="/images/product.png"
-            alt="product overlay"
-            className="w-[200px] md:w-[380px] drop-shadow-lg transition-transform duration-700 group-hover:scale-105"
-          />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,theme(colors.blue.900/10%)_0%,transparent_70%)] w-full h-[500px] rounded-full -z-10 pointer-events-none" />
+          <motion.div
+            className="w-[200px] md:w-[380px] transition-transform duration-700 group-hover:scale-105"
+            style={{ willChange: "transform", WebkitTransform: "translateZ(0)" }}
+          >
+            <Image
+              src="/images/product.png"
+              alt="product overlay"
+              width={380}
+              height={475}
+              className="w-full h-auto drop-shadow-lg object-contain"
+            />
+          </motion.div>
         </motion.div>
 
         {/* RIGHT - INGREDIENTS */}
@@ -226,7 +242,7 @@ export default function Home() {
       {/* --- AI SKIN SCANNER SECTION --- */}
       <section className="relative py-24 md:py-36 overflow-hidden bg-[#09090b] text-white">
         {/* Subtle background glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] max-w-[800px] max-h-[800px] bg-primary/20 rounded-full blur-[150px] pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] max-w-[800px] max-h-[800px] bg-[radial-gradient(circle_at_center,theme(colors.primary.DEFAULT/25%)_0%,transparent_70%)] rounded-full pointer-events-none" />
         
         <div className="max-w-7xl mx-auto px-6 relative z-10 text-center">
           <motion.div
@@ -366,6 +382,8 @@ export default function Home() {
                     loop
                     playsInline
                     controls={false}
+                    preload="metadata"
+                    style={{ WebkitTransform: "translateZ(0)" }}
                     className="w-full h-full object-cover group-hover:scale-105 transition duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
@@ -392,7 +410,7 @@ export default function Home() {
 
       {/* --- TESTIMONIALS --- */}
       <section className="py-24 md:py-36 bg-background overflow-hidden relative border-y border-foreground/5">
-        <div className="absolute top-0 left-0 w-[400px] h-[400px] bg-primary/5 rounded-full blur-[100px] -translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute top-0 left-0 w-[400px] h-[400px] bg-[radial-gradient(circle_at_center,theme(colors.primary.DEFAULT/10%)_0%,transparent_70%)] rounded-full -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
         
         <div className="max-w-7xl mx-auto px-6 relative z-10 text-center">
           <motion.p 
@@ -450,8 +468,8 @@ export default function Home() {
       {/* --- FINAL CTA & APP BANNER --- */}
       <section className="relative overflow-hidden py-24 md:py-36 text-center bg-[#09090b] text-white">
         <div className="absolute inset-0 z-0">
-           <div className="absolute inset-0 bg-gradient-to-t from-black via-[#09090b] to-black opacity-80" />
-           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[600px] bg-primary/20 rounded-full blur-[120px]" />
+           <div className="absolute inset-0 bg-gradient-to-t from-black via-[#09090b] to-black opacity-80 pointer-events-none" />
+           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[600px] bg-[radial-gradient(circle_at_center,theme(colors.primary.DEFAULT/30%)_0%,transparent_70%)] rounded-full pointer-events-none" />
         </div>
 
         <motion.div 

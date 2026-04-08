@@ -7,6 +7,7 @@ import "swiper/css/effect-fade";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 const slides = [
   {
@@ -74,7 +75,7 @@ export default function HeroSlider() {
                 <div className="absolute inset-0 z-0 overflow-hidden bg-black">
                   {slide.isProduct ? (
                      <div className="absolute inset-0 bg-gradient-to-br from-[#EFEAE4] to-[#fcfcfb] flex items-start md:items-center justify-center md:justify-start md:pl-[15%] pt-24 md:pt-0">
-                        <motion.img
+                        <motion.div
                           initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
                           animate={{ 
                             opacity: isActive ? 1 : 0, 
@@ -82,23 +83,41 @@ export default function HeroSlider() {
                             rotate: isActive ? 0 : -5
                           }}
                           transition={{ duration: 1.5, ease: "easeOut" }}
-                          src={slide.image}
-                          className={`max-h-[45%] md:max-h-[70%] max-w-[80%] object-contain drop-shadow-2xl z-10 transition-transform duration-700 hover:-translate-y-4 hover:rotate-3 animate-float`}
-                        />
-                        <div className="absolute top-[30%] md:top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] md:w-[60vw] md:h-[60vw] max-w-[600px] max-h-[600px] bg-white/50 rounded-full blur-[80px] md:blur-[100px] z-0" />
+                          style={{ willChange: "transform, opacity", WebkitTransform: "translateZ(0)" }}
+                          className={`max-h-[45%] md:max-h-[70%] max-w-[80%] z-10 transition-transform duration-700 hover:-translate-y-4 hover:rotate-3 animate-float flex justify-center h-full w-full relative`}
+                        >
+                          <Image
+                            src={slide.image}
+                            alt={slide.title || "Product"}
+                            fill
+                            priority
+                            sizes="(max-width: 768px) 80vw, 50vw"
+                            className="object-contain drop-shadow-2xl"
+                          />
+                        </motion.div>
+                        <div className="absolute top-[30%] md:top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] md:w-[60vw] md:h-[60vw] max-w-[600px] max-h-[600px] bg-[radial-gradient(circle_at_center,theme(colors.white/60%)_0%,transparent_70%)] rounded-full z-0 pointer-events-none" />
                      </div>
                   ) : (
                     <>
-                      <motion.img
+                      <motion.div
                         initial={{ scale: 1.15 }}
                         animate={{ scale: isActive ? 1 : 1.15 }}
                         transition={{ duration: 8, ease: "linear" }}
-                        src={slide.image}
-                        className={`w-full h-full object-cover transition-opacity duration-1000 ${isActive ? 'opacity-100' : 'opacity-0'} ${slide.imgClass}`}
-                      />
+                        style={{ willChange: "transform", WebkitTransform: "translateZ(0)" }}
+                        className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ${isActive ? 'opacity-100' : 'opacity-0'}`}
+                      >
+                        <Image
+                          src={slide.image}
+                          alt={slide.title || "Hero"}
+                          fill
+                          priority
+                          sizes="100vw"
+                          className={`object-cover ${slide.imgClass || ''}`}
+                        />
+                      </motion.div>
                       {/* Global dark gradient overlays to increase contrast and premium feel */}
-                      <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-black/80 via-black/40 md:via-black/20 to-transparent z-10" />
-                      <div className="absolute inset-0 bg-black/20 md:bg-black/30 z-10" />
+                      <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-black/80 via-black/40 md:via-black/20 to-transparent z-10 pointer-events-none" />
+                      <div className="absolute inset-0 bg-black/20 md:bg-black/30 z-10 pointer-events-none" />
                     </>
                   )}
                 </div>
@@ -114,6 +133,7 @@ export default function HeroSlider() {
                         filter: isActive ? "blur(0px)" : "blur(10px)"
                       }}
                       transition={{ duration: 1.2, delay: 0.4, ease: [0.25, 0.4, 0, 1] }}
+                      style={{ willChange: "transform, opacity, filter", WebkitTransform: "translateZ(0)" }}
                       className={`w-full max-w-[95%] sm:max-w-lg md:max-w-xl p-6 sm:p-8 md:p-14 rounded-[2rem] relative overflow-hidden group ${slide.isProduct ? 'bg-black/80 text-white backdrop-blur-2xl border border-white/10 shadow-[0_8px_40px_rgba(0,0,0,0.3)]' : 'bg-black/50 md:bg-black/40 backdrop-blur-xl md:backdrop-blur-2xl border border-white/10 shadow-[0_8px_40px_rgba(0,0,0,0.5)]'}`}
                     >
                       {/* Subtle animated gradient inside the card to give a glossy effect */}
