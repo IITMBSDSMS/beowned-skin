@@ -60,7 +60,7 @@ export default function LoadingScreen() {
       transition: {
         delay: 0.1 * i,
         duration: 0.8,
-        ease: [0.22, 1, 0.36, 1],
+        ease: "easeOut",
       },
     }),
   };
@@ -97,7 +97,7 @@ export default function LoadingScreen() {
                   className="flex overflow-hidden pb-2"
                   initial={{ letterSpacing: "0.5em" }}
                   animate={{ letterSpacing: "-0.05em" }}
-                  transition={{ duration: 2, ease: [0.22, 1, 0.36, 1] }}
+                  transition={{ duration: 2, ease: "easeOut" }}
                 >
                   {logoText.split("").map((letter, i) => (
                     <motion.span
