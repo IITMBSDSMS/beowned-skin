@@ -14,6 +14,8 @@ export default function BeOwnedAIPage() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [scanPhase, setScanPhase] = useState(0);
   const [glitchText, setGlitchText] = useState("");
+  const [analysisData, setAnalysisData] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
   
   const scanPhrases = [
     "INITIALIZING NEURAL MESH...",
@@ -40,34 +42,70 @@ export default function BeOwnedAIPage() {
     }
   }, [view]);
 
-  // Handle Dramatic Scan Sequence
+  // Handle Dramatic Scan Sequence + Status Phrases
   useEffect(() => {
     if (view === "SCANNING") {
       const interval = setInterval(() => {
         setScanPhase((prev) => {
           if (prev >= scanPhrases.length - 2) {
             clearInterval(interval);
-            setTimeout(() => setView("ANALYZING"), 800);
-            return prev + 1;
+            return prev;
           }
           return prev + 1;
         });
-      }, 1000);
+      }, 800);
       return () => clearInterval(interval);
     }
-    
-    if (view === "ANALYZING") {
-      setTimeout(() => setView("RESULTS"), 2500); 
-    }
   }, [view]);
+
+  // Real AI Analysis Trigger
+  useEffect(() => {
+    if (view === "SCANNING" && imagePreview) {
+      performAnalysis();
+    }
+  }, [view, imagePreview]);
+
+  const performAnalysis = async () => {
+    try {
+      // Small artificial delay for "scanning" feel (psychological UX)
+      await new Promise(r => setTimeout(r, 4000));
+      
+      setView("ANALYZING");
+
+      const response = await fetch("/api/analyze-skin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image: imagePreview })
+      });
+
+      const data = await response.json();
+
+      if (!data.valid) {
+        setError(data.error || "Neural Matrix requires human epidermal data.");
+        setView("IDLE");
+        return;
+      }
+
+      setAnalysisData(data);
+      setView("RESULTS");
+    } catch (err) {
+      setError("Neural matrix offline. Please try again.");
+      setView("IDLE");
+    }
+  };
 
   // File Upload Handler
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setImagePreview(URL.createObjectURL(file));
-      setView("SCANNING");
-      setScanPhase(0);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+        setView("SCANNING");
+        setError(null);
+        setScanPhase(0);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -119,6 +157,16 @@ export default function BeOwnedAIPage() {
                   Stop Guessing. <br />
                   <span className="italic font-normal bg-clip-text text-transparent bg-gradient-to-r from-gray-500 to-gray-400">Discover The Truth.</span>
                 </motion.h1>
+
+                {error && (
+                  <motion.div 
+                    initial={{ opacity: 0, scale: 0.9 }} 
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="mb-8 p-4 bg-red-100 border border-red-200 text-red-600 font-bold uppercase tracking-widest text-xs rounded-xl"
+                  >
+                    {error}
+                  </motion.div>
+                )}
 
                 <motion.p variants={fadeInUp} className="text-gray-500 text-base md:text-lg mb-8 leading-relaxed max-w-xl mx-auto font-light relative z-10">
                   Upload an unfiltered photo. Our proprietary neural network will instantly expose microscopic vulnerabilities and map your exact clinical protocol.
@@ -192,7 +240,7 @@ export default function BeOwnedAIPage() {
                   <br/>{glitchText}
                 </div>
 
-                <div className="relative w-full max-w-lg aspect-[3/4] max-h-[70vh] rounded-none md:rounded-3xl overflow-hidden border-2 border-red-500/30 shadow-[0_0_50px_rgba(239,68,68,0.2)] bg-gray-900 mx-auto">
+                <div className="relative w-full max-lg aspect-[3/4] max-h-[70vh] rounded-none md:rounded-3xl overflow-hidden border-2 border-red-500/30 shadow-[0_0_50px_rgba(239,68,68,0.2)] bg-gray-900 mx-auto">
                   {imagePreview && (
                     <img src={imagePreview} className="w-full h-full object-cover opacity-50 contrast-125 saturate-0" alt="Scanning..." />
                   )}
@@ -225,13 +273,13 @@ export default function BeOwnedAIPage() {
                     </>
                   )}
 
-                  {/* Analyze Mode: Flashing Red Vulnerabilities */}
+                  {/* Analyze Mode: Identification Step */}
                   {view === "ANALYZING" && (
                     <div className="absolute inset-0 bg-red-500/20 animate-pulse mix-blend-color-dodge flex flex-col justify-center items-center font-mono z-20">
                       <motion.span animate={{ opacity: [0,1,0] }} transition={{ repeat: Infinity, duration: 0.2 }} className="text-4xl text-red-100 font-bold tracking-widest uppercase">
-                         WARNING
+                         IDENTIFYING
                       </motion.span>
-                      <span className="text-white text-sm tracking-widest mt-2 bg-red-600 px-4 py-1">DEFICIENCIES LOCATED</span>
+                      <span className="text-white text-sm tracking-widest mt-2 bg-red-600 px-4 py-1">GENETIC BIOMARKERS</span>
                     </div>
                   )}
 
@@ -252,7 +300,7 @@ export default function BeOwnedAIPage() {
                       exit={{ opacity: 0, x: 20 }}
                       className={`text-xl font-bold tracking-[0.2em] uppercase ${scanPhase >= 5 || view === "ANALYZING" ? 'text-red-500 animate-pulse' : 'text-white'}`}
                     >
-                      {view === "ANALYZING" ? "COMPILING CLINICAL VERDICT..." : scanPhrases[scanPhase]}
+                      {view === "ANALYZING" ? "SYNTHESIZING CLINICAL VERDICT..." : scanPhrases[scanPhase]}
                     </motion.p>
                   </AnimatePresence>
                 </div>
@@ -260,7 +308,7 @@ export default function BeOwnedAIPage() {
             )}
 
             {/* ===================== RESULTS VIEW ===================== */}
-            {view === "RESULTS" && (
+            {view === "RESULTS" && analysisData && (
               <motion.div
                 key="results"
                 initial={{ opacity: 0, scale: 0.9, filter: "blur(10px)" }}
@@ -273,7 +321,7 @@ export default function BeOwnedAIPage() {
                     initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
                     className="inline-block px-4 py-1.5 bg-red-500 text-white text-[10px] uppercase tracking-[0.4em] font-bold rounded-full mb-6 shadow-[0_0_20px_rgba(239,68,68,0.4)] animate-pulse"
                   >
-                    CRITICAL VULNERABILITIES DETECTED
+                    DIAGNOSTIC ARCHIVE COMPLETE
                   </motion.div>
                   <motion.h2 
                      initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
@@ -290,16 +338,18 @@ export default function BeOwnedAIPage() {
                     <div className="absolute top-0 left-0 w-full h-1 bg-red-500" />
                     
                     <div>
-                       <h3 className="text-2xl font-bold text-gray-900 mb-2 uppercase tracking-wide">Analysis Profile</h3>
-                       <p className="text-gray-500 font-light text-sm">Your unique cellular matrix reveals severe localized degradation requiring immediate intervention.</p>
+                       <h3 className="text-2xl font-bold text-gray-900 mb-4 uppercase tracking-wide">Analysis Profile</h3>
+                       <p className="text-gray-600 font-light text-[15px] leading-relaxed italic border-l-2 border-red-500 pl-4">
+                         "{analysisData.verdict}"
+                       </p>
                     </div>
                     
                     {/* Urgency Metrics */}
                     {[
-                      { label: "Sebum Toxicity Level", value: 88, desc: "CRITICAL: Severe overproduction causing massive pore congestion and recurrent inflammation.", color: "bg-red-600" },
-                      { label: "Barrier Integrity", value: 34, desc: "WARNING: Micro-punctures present. Highly susceptible to environmental degradation.", color: "bg-orange-500" },
-                      { label: "Hydration Retention", value: 42, desc: "POOR: Rapid transepidermal water loss. Cells are functionally drowning in oil while starving for hydration.", color: "bg-orange-500" },
-                      { label: "Textural Degeneration", value: 76, desc: "HIGH RISK: Irregular, coarse epidermal surfacing actively accelerating visible aging.", color: "bg-red-500" }
+                      { label: "Sebum Toxicity Level", value: analysisData.metrics.sebum, desc: analysisData.metrics.sebum > 70 ? "CRITICAL: Severe overproduction detected." : "STABLE: Sebum production within normal limits.", color: "bg-red-600" },
+                      { label: "Barrier Integrity", value: analysisData.metrics.barrier, desc: analysisData.metrics.barrier < 40 ? "WARNING: Micro-punctures present. Highly sensitive." : "HEALTHY: Skin barrier is effectively resilient.", color: "bg-orange-500" },
+                      { label: "Hydration Retention", value: analysisData.metrics.hydration, desc: analysisData.metrics.hydration < 50 ? "POOR: Significant transepidermal water loss." : "OPTIMAL: Cellular hydration is well maintained.", color: "bg-blue-500" },
+                      { label: "Textural Degeneration", value: analysisData.metrics.texture, desc: analysisData.metrics.texture > 60 ? "HIGH RISK: Epidermal surfacing shows signs of accelerated aging." : "SMOOTH: Texture is consistent and resilient.", color: "bg-red-500" }
                     ].map((metric, i) => (
                       <motion.div 
                         initial={{ opacity: 0, x: -20 }} 
@@ -310,7 +360,7 @@ export default function BeOwnedAIPage() {
                       >
                         <div className="flex justify-between items-end mb-2">
                           <span className="font-bold text-xs tracking-widest text-gray-900 uppercase flex items-center gap-2">
-                            {metric.value > 70 && <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping"></span>}
+                            {((i === 0 && metric.value > 70) || (i === 1 && metric.value < 40)) && <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping"></span>}
                             {metric.label}
                           </span>
                           <span className={`text-xs font-black ${metric.value > 70 ? 'text-red-600' : 'text-gray-900'}`}>{metric.value}%</span>
@@ -328,14 +378,13 @@ export default function BeOwnedAIPage() {
                     ))}
                   </div>
 
-                  {/* Right Column: The Savior Protocol - Mindwash / Urgency Conversion */}
+                  {/* Right Column: The Savior Protocol - Real Recommendations */}
                   <motion.div 
                     initial={{ opacity: 0, x: 20 }} 
                     animate={{ opacity: 1, x: 0 }} 
                     transition={{ delay: 1 }}
                     className="md:col-span-5 bg-gray-900 text-white rounded-[2rem] p-8 md:p-12 shadow-[0_30px_60px_rgba(0,0,0,0.4)] flex flex-col relative overflow-hidden"
                   >
-                    {/* Radar sweep background effect in the box */}
                     <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-red-500/10 rounded-full blur-[100px] pointer-events-none translate-x-1/2 -translate-y-1/2" />
                     
                     <span className="text-[10px] uppercase tracking-[0.4em] font-black text-red-500 mb-6 border-b border-white/10 pb-4">
@@ -344,12 +393,26 @@ export default function BeOwnedAIPage() {
                     
                     <h3 className="text-3xl font-light tracking-tight mb-2 uppercase">Immediate <br/><span className="font-bold text-white">Intervention</span></h3>
                     
-                    <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 my-6">
-                      <p className="text-red-400 font-bold text-xs uppercase tracking-widest mb-1">Status: Degrading</p>
-                      <p className="text-white/80 font-light text-sm leading-relaxed">
-                        To halt structural degradation and aggressively reset your sebum toxicity levels, you must initiate the **Niacinamide 10% Protocol** explicitly. Traditional cosmetics will only exacerbate your microscopic vulnerabilities.
-                      </p>
-                    </div>
+                    {analysisData.recommendations && analysisData.recommendations.length > 0 ? (
+                      <div className="space-y-6 mt-6 mb-10">
+                        {analysisData.recommendations.map((rec: any, i: number) => (
+                           <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-5 hover:bg-white/10 transition-colors">
+                              <p className="text-red-400 font-bold text-[10px] uppercase tracking-widest mb-2">Prescription {i+1}</p>
+                              <h4 className="text-lg font-bold text-white mb-2 underline decoration-red-500 underline-offset-4 decoration-2">BE-OWNED SKU: {rec.id}</h4>
+                              <p className="text-white/70 text-sm font-light leading-relaxed">
+                                {rec.reason}
+                              </p>
+                           </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 my-6">
+                        <p className="text-red-400 font-bold text-xs uppercase tracking-widest mb-1">Status: Degrading</p>
+                        <p className="text-white/80 font-light text-sm leading-relaxed">
+                          To halt structural degradation and aggressively reset your matrix, you must initiate the **Niacinamide 10% Protocol** explicitly. Traditional cosmetics will only exacerbate your microscopic vulnerabilities.
+                        </p>
+                      </div>
+                    )}
                     
                     <ul className="space-y-4 mb-10">
                       <li className="flex items-start gap-3">
@@ -359,10 +422,6 @@ export default function BeOwnedAIPage() {
                       <li className="flex items-start gap-3">
                          <div className="mt-1 text-red-500"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
                          <span className="text-sm font-medium text-white/90">Seal micro-punctures within 48 hours</span>
-                      </li>
-                      <li className="flex items-start gap-3">
-                         <div className="mt-1 text-red-500"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
-                         <span className="text-sm font-medium text-white/90">Force cellular textural realignment</span>
                       </li>
                     </ul>
                     
