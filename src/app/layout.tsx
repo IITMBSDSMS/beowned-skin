@@ -76,6 +76,8 @@ export const metadata: Metadata = {
   },
 };
 
+import LoadingScreen from './components/LoadingScreen';
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -87,6 +89,7 @@ export default function RootLayout({
       className={`${poppins.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="font-inter min-h-full flex flex-col">
+        <LoadingScreen />
         {children}
         <Script
           src="https://checkout.razorpay.com/v1/checkout.js"
