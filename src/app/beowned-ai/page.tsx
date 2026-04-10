@@ -80,6 +80,12 @@ export default function BeOwnedAIPage() {
 
       const data = await response.json();
 
+      if (!response.ok) {
+        setError(data.error || "Neural matrix link severed.");
+        setView("IDLE");
+        return;
+      }
+
       if (!data.valid) {
         setError(data.error || "Neural Matrix requires human epidermal data.");
         setView("IDLE");

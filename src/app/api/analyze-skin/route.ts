@@ -78,7 +78,9 @@ export async function POST(req: Request) {
       }
     `;
 
-    // 4. Extract base64 data correctly
+    // 4. Extract base64 data and mimeType correctly
+    const mimeMatch = image.match(/^data:(image\/\w+);base64,/);
+    const mimeType = mimeMatch ? mimeMatch[1] : "image/jpeg";
     const base64Data = image.split(",")[1] || image;
 
     // 5. Generate Content
@@ -87,7 +89,7 @@ export async function POST(req: Request) {
       {
         inlineData: {
           data: base64Data,
-          mimeType: "image/jpeg"
+          mimeType: mimeType
         }
       }
     ]);
@@ -99,6 +101,10 @@ export async function POST(req: Request) {
 
   } catch (error: any) {
     console.error("AI Analysis Error:", error);
-    return NextResponse.json({ error: "Neural matrix offline. Please try again later." }, { status: 500 });
+    // Returning the actual error message temporarily to help the user debug setup issues
+    return NextResponse.json({ 
+      error: `Neural matrix error: ${error.message || "Unknown error"}`,
+      details: error.stack
+    }, { status: 500 });
   }
 }
